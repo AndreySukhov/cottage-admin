@@ -1,0 +1,12 @@
+.formRow {
+  margin-bottom: 16px;
+}
+
+.last-row {
+  margin-bottom: 0;
+}
+
+.submit-row {
+  margin-top: 30px;
+  margin-bottom: 0;
+}

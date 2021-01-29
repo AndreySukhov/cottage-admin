@@ -1,0 +1,15 @@
+.heading {
+  margin: 0;
+  font-family: var(--Roboto);
+  font-weight: 700;
+}
+
+.heading--h1 {
+  font-size: var(--h1FontSize);
+  margin-bottom: 40px;
+}
+
+.heading--h2 {
+  font-size: var(--h2FontSize);
+  margin-bottom: 24px;
+}

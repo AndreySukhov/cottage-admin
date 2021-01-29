@@ -1,0 +1,39 @@
+.ctn {
+  display: block;
+}
+
+.dropzone {
+
+  min-height: 190px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: var(--white);
+  border: 1px dashed #AAAAAA;
+  box-sizing: border-box;
+  border-radius: 4px;
+  text-align: center;
+  font-family: var(--Inter);
+  font-size: 1rem;
+  color: var(--inputPlaceholder);
+  outline: none;
+  transition: border-color var(--defaultTransitionTime) var(--defaultTransitionType),
+              background-color var(--defaultTransitionTime) var(--defaultTransitionType);
+}
+
+.dropzone:focus {
+  background: rgba(250, 223, 128, 0.3);
+  border-color: var(--black);
+}
+
+.preview-text {
+  max-width: 350px;
+  margin: 0 auto;
+}
+
+.drag-active {
+  border-color: var(--black);
+  background: rgba(250, 223, 128, 0.3);
+}

@@ -1,0 +1,12 @@
+:root {
+  /* fonts list */
+  --Inter: 'Inter', sans-serif;
+  --Roboto: 'Roboto', sans-serif;
+
+  /* font base size */
+  --fontBaseSize: 16px;
+
+  /* heading font sizes */
+  --h1FontSize: 2.5rem;
+  --h2FontSize: 2rem;
+}

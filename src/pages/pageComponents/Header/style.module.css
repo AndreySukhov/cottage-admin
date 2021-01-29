@@ -1,0 +1,45 @@
+.wrap {
+  border-bottom: 1px solid #D8D8D8;
+}
+
+.content {
+  padding: 22px 18px;
+  display: flex;
+  align-items: center;
+}
+
+.settings-wrap {
+  margin-right: 18px;
+}
+
+.user {
+  margin-right: 24px;
+}
+
+.add-item{
+  margin-right: 10px;
+}
+
+.header-actions {
+  margin-left: auto;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-gap: 25px;
+
+  align-items: center;
+}
+
+.header-actions-item {
+  margin-right: 30px;
+}
+
+.header-publish {
+  margin-left: 15px;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-gap: 8px;
+}
+
+.setting-link {
+  color: var(--black);
+}

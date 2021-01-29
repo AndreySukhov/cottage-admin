@@ -1,0 +1,78 @@
+.wrap {
+  display: inline-flex;
+  position: relative;
+}
+
+.input {
+  padding: 20px 16px;
+  border: 1px solid #828282;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: var(--Inter);
+
+  transition: border-color var(--defaultTransitionTime) var(--defaultTransitionType);
+
+  -webkit-appearance: none;
+}
+
+.with-right-addon {
+  padding-right: 60px;
+}
+
+.fw,
+.input-fw{
+  width: 100%;
+}
+
+.right-addon {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  bottom: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  background: var(--white);
+  z-index: 2;
+}
+
+.toggle-pass-icon {
+  width: 22px;
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+.toggle-visibility-icon {
+  color: var(--black);
+  width: 22px;
+}
+
+.input:focus,
+.input:active {
+  outline: none;
+  border-color: var(--black);
+}
+
+.textarea {
+  height: 190px;
+  resize: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance:textfield;
+}
+
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: 500;
+}

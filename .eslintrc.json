@@ -1,0 +1,50 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true,
+        "amd": true,
+        "node": true
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended"
+    ],
+    "parser": "babel-eslint",
+    "parserOptions": {
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 2018
+    },
+    "plugins": [
+        "react"
+    ],
+    "rules": {
+        "indent": [2, 2, {"SwitchCase": 1}],
+        "react/react-in-jsx-scope": "off",
+        "linebreak-style": [
+            "warn",
+            "unix"
+        ],
+        "quotes": [
+            "warn",
+            "single"
+        ],
+        "semi": [
+            "warn",
+            "always"
+        ],
+        "react/prop-types": "warn",
+        "no-unused-vars": "warn",
+        "react/jsx-a11y/anchor-is-valid": "off",
+        "react/no-did-update-set-state": "off",
+        "array-callback-return": "error",
+        "react/jsx-uses-vars": "error"
+    }
+}

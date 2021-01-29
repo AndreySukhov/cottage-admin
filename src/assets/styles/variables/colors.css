@@ -1,0 +1,22 @@
+:root {
+  --black: #000;
+  --white: #fff;
+  --lightText: #FBFBFB;
+  --yellow: #FADF80;
+  --yellowIntense: #F8D24D;
+  --yellowLight: #fbf3d6;
+  --red: #DD4848;
+
+  --disabled: #E6E6E6;
+
+  --grey100: #3A3D49;
+  --grey80: #636363;
+  --grey60: #9E9E9E;
+
+  --blue: #156ACF;
+
+  --dropzoneActive: #fef5d9;
+
+  --inputBorder: #AAA;
+  --inputPlaceholder: #666;
+}
