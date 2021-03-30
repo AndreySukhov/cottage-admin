@@ -1,6 +1,6 @@
 {
   "name": "cottage-config-admin",
-  "homepage": "https://github.com/AndreySukhov/cottage-admin",
+  "homepage": "https://andreysukhov.github.io/cottage-admin/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
