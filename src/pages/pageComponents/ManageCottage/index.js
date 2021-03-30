@@ -1,5 +1,6 @@
 import React, {useContext, useState, useEffect} from 'react';
 import cc from 'classcat';
+import api from '../../../api'
 
 import Button from '../../../components/form/Button'
 import Input from '../../../components/form/Input'
@@ -24,19 +25,15 @@ const ManageCottage = () => {
   const [contextActionText, setContextActionText] = useState('');
 
   useEffect(() => {
+
+
+    api.get('Projects')
+      .then((res) => {
+        console.log(res, 'Projects')
+        setCottageData(res.data.data)
+      })
+
     setMode('initial')
-    setCottageData([{
-      title: 'Пазитана',
-      id: 0,
-      connectedIds: [],
-      type: 'current'
-    },
-    {
-      title: 'Фазендо',
-      id: 1,
-      connectedIds: [],
-      type: 'current'
-    }])
   }, [])
 
   const clearContextMenuData = () => {
@@ -55,7 +52,6 @@ const ManageCottage = () => {
 
   const handleContextActionBtn = ({id, actionType}) => {
     clearContextMenuData()
-
   }
 
   if (mode === 'pending') {

@@ -16,7 +16,7 @@ import {Helmet} from "react-helmet";
 const CottageForm = (props) => {
 
   const [formStep, setFormStep] = useState(null)
-  console.log(props)
+  const [baseInfo, setBaseInfo] = useState(null)
 
   return (
     <div className={style['page-wrap']}>

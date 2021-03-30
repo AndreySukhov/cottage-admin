@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {Helmet} from 'react-helmet';
 import {toast} from "react-toastify";
 import cc from 'classcat'
@@ -10,57 +10,93 @@ import SubmitRow from '../../components/form/SubmitRow';
 import Modal from "../../components/Modal";
 import Heading from "../../components/typography/Heading";
 import TextBlock from "../../components/typography/TextBlock";
-
+import SelectInput from "../../components/form/SelectInput";
+import ResetPassword from "../Auth/ResetPassword";
 import AddUserForm from './AddUserForm'
 
+import {AppContext} from "../../App";
 import api from '../../api'
 import {httpErrorCodeToMessage} from "../../utils";
+import {USER_ROLES_ARRAY, USER_ROLES} from "../../utils/constants";
 
 import style from './style.module.css'
-import ResetPassword from "../Auth/ResetPassword";
+
 import {ReactComponent as RefreshEmpty} from "../../assets/icons/refresh-empty.svg";
+import SetPasswordForm from "./SetPasswordForm";
 
 const ManageUsers = () => {
 
   const [status, setStatus] = useState('pending');
   const [users, setUsers] = useState([]);
-  const [newUsers, setNewUsers] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [resetEmail, setResetEmail] = useState(false);
   const [removeUserData, setRemoveUserData] = useState(null);
 
+  const context = useContext(AppContext);
+
+
   const getUsers = () => {
     setStatus('pending')
-    api.get('/api/v1/Users').then((res) => {
-      console.log(res)
+    api.get('/Users').then(({data}) => {
+      setUsers(data.data.map((user) => {
+        return {
+          ...user,
+          type: 'current'
+        }
+      }))
     })
       .catch((e) => {
-        console.log(e)
+        console.error(e)
         toast.error(httpErrorCodeToMessage());
       })
-
-    setUsers([
-      {
-        "id": 0,
-        "email": "string",
-        "role": "Admin",
-        type: 'current'
-      }
-    ])
     setStatus('success')
   }
 
-  const removeUser = ({id, type}) => {
-
-    if (type === 'new') {
-      setNewUsers(newUsers.filter((user) => user.id !== id));
-      return
-    }
-
-    api.delete(`/api/v1/Users/${id}`)
+  const handleRemoveUser = (id) => {
+    api.delete(`/Users/${id}`)
       .then(() => {
         setUsers(users.filter((user) => user.id !== id));
+        setRemoveUserData(null)
+        toast.success('Пользователь удален');
+      }).catch((e) => {
+      console.error(e)
+      toast.error(httpErrorCodeToMessage());
+    })
+  }
+
+  const handleAddUser = async ({email, role}) => {
+    setStatus('userPending')
+    try {
+      const res = await api.post('/Users', {
+        email,
+        role
       })
+      setRemoveUserData(null)
+      setUsers([...users, res.data.data])
+      toast.success('Пользователь добавлен');
+
+    } catch (e) {
+      console.error(e)
+      toast.error(httpErrorCodeToMessage());
+    }
+    setStatus('success')
+  }
+
+  const updateRole = async (id, role) => {
+    api.put(`/Users/${id}`, {
+      role,
+    }).then((res) => {
+      const newUserData = res?.data?.data;
+      setUsers(users.map((user) => {
+        if (user.id === newUserData.id) {
+          return newUserData
+        }
+        return user
+      }))
+    }).catch((e) => {
+      console.error(e)
+      toast.error(httpErrorCodeToMessage());
+    })
   }
 
   useEffect(() => {
@@ -90,14 +126,7 @@ const ManageUsers = () => {
           isOpen={true}
           onExit={() => setModalVisible(false)}>
           <AddUserForm
-            onAdd={({email, role}) => {
-              setNewUsers([...newUsers, {
-                email,
-                role,
-                type: 'new',
-                id: new Date().getTime()
-              }])
-            }}
+            onAdd={handleAddUser}
             onCancel={() => setModalVisible(false)}/>
         </Modal>
       )}
@@ -123,7 +152,7 @@ const ManageUsers = () => {
             <br/>
             <SubmitRow align="space-around">
               <Button onClick={() => {
-                removeUser({id: removeUserData.id, type: removeUserData.type, email: removeUserData.email})
+                handleRemoveUser(removeUserData.id)
               }}>
                 Да, удалить
               </Button>
@@ -139,18 +168,35 @@ const ManageUsers = () => {
         </Modal>
       )}
       <div className={style['form-wrap']}>
-        <form>
-          <div className={style['inputs-wrap']}>
-            {[...users, ...newUsers].map((user) => {
-              return (
-                <div className={style['form-item-grid']} key={user.id}>
-                  <div className={style['form-item-input']}>
-                    <Input value={user.email} readOnly fw type='email'/>
-                  </div>
-                  <div className={style['form-item-select']}>
-                    <Input value={user.role} readOnly fw/>
-                  </div>
-                  <div className={style.aside}>
+        <div className={style['inputs-wrap']}>
+          {users.map((user) => {
+
+            const isSameUser = user.id === context?.user?.id
+
+            return (
+              <div className={style['form-item-grid']} key={user.id}>
+                <div className={style['form-item-input']}>
+                  <Input value={user.email} readOnly fw type='email'/>
+                </div>
+                <div className={style['form-item-select']}>
+                  {isSameUser
+                    ? (<Input value={user.role} readOnly fw/>)
+                    : (
+                      <SelectInput
+                        onChange={(val) => {
+                          updateRole(user.id, val.value)
+                        }}
+                        selectedOption={{
+                          value: user.role, label: USER_ROLES[user.role].label
+                        }}
+                        options={USER_ROLES_ARRAY}
+                      />
+                    )
+                  }
+                </div>
+                <div className={style.aside}>
+
+                  <>
                     <div className={style['aside-row']}>
                       <button
                         disabled={formPending}
@@ -160,45 +206,44 @@ const ManageUsers = () => {
                         type="button"
                         className={cc(['button-clear-style', style['aside-row-btn'], style['aside-row-btn--reset']])}
                       >
-                          сбросить пароль
+                        сбросить пароль
                       </button>
                     </div>
-                    <div className={style['aside-row']}>
-                      <button
-                        onClick={() => setRemoveUserData(user)}
-                        disabled={formPending}
-                        type="button"
-                        className={cc(['button-clear-style', style['aside-row-btn'], style['aside-row-btn--delete']])}>
-                        удалить
-                      </button>
-                    </div>
-                  </div>
+                    {!isSameUser && context.user.role === USER_ROLES.Admin.value && (
+                      <div className={style['aside-row']}>
+                        <button
+                          onClick={() => setRemoveUserData(user)}
+                          disabled={formPending}
+                          type="button"
+                          className={cc(['button-clear-style', style['aside-row-btn'], style['aside-row-btn--delete']])}>
+                          удалить
+                        </button>
+                      </div>
+                    )}
+                  </>
                 </div>
-              )
-            })}
-            <div className={style['form-item']}>
-              <Button
-                view={'add'}
-                type={'button'}
-                fw
-                disabled={formPending}
-                onClick={() => {
-                  setModalVisible(true)
-                }}
-              >
-                + Добавить пользователя
-              </Button>
-            </div>
+              </div>
+            )
+          })}
+          <div className={style['form-item']}>
+            <Button
+              view={'add'}
+              type={'button'}
+              fw
+              disabled={formPending}
+              onClick={() => {
+                setModalVisible(true)
+              }}
+            >
+              + Добавить пользователя
+            </Button>
           </div>
-          <SubmitRow>
-            <Button type={'submit'} disabled={formPending}>
-              Сохранить
-            </Button>
-            <Button to={'/'} view={'text'}>
-              На главную
-            </Button>
-          </SubmitRow>
-        </form>
+          {status === 'userPending' && (
+            <Preloader />
+          )}
+        </div>
+        <br/>
+        <SetPasswordForm />
       </div>
     </div>
   )

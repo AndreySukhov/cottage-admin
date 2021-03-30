@@ -1,12 +1,14 @@
-import React, { Component } from 'react';
-import Cookies from 'js-cookie';
+import React, {Component} from 'react';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Redirect
+  Redirect,
+  withRouter,
 } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
+import axios from "axios";
+
+import {toast, ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PropTypes from 'prop-types';
 
@@ -16,14 +18,19 @@ import CottageForm from './pages/CottageForm'
 import Header from './pages/pageComponents/Header'
 import ManageCottage from './pages/pageComponents/ManageCottage'
 
+import api from './api';
+
 import Modal from "./components/Modal";
 
 import './assets/styles/main.css';
-
+import {httpErrorCodeToMessage, isAdmin} from "./utils";
 
 export const AppContext = React.createContext({
-  authToken: '',
-  manageCottageVisible: false
+  accessToken: '',
+  manageCottageVisible: false,
+  user: null,
+  setUser: () => {
+  }
 });
 
 class AppContextRoot extends Component {
@@ -31,21 +38,60 @@ class AppContextRoot extends Component {
     super(props);
 
     this.state = {
-      authToken: Cookies.get('auth-token'),
-      manageCottageVisible: false
+      accessToken: localStorage.getItem('accessToken'),
+      manageCottageVisible: false,
+      user: null,
     };
   }
 
-  handleAuthState = (token) => {
+  componentDidMount() {
+    this.handleAuthToken()
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.accessToken !== this.state.accessToken) {
+      this.handleAuthToken()
+    }
+  }
+
+  handleAuthState = (accessToken) => {
     this.setState({
-      authToken: token
+      accessToken
     });
 
-    if (token) {
-      Cookies.set('auth-token', token);
+    if (accessToken) {
+      axios.defaults.headers
+      localStorage.setItem('accessToken',accessToken)
     } else {
-      Cookies.remove('auth-token');
+      localStorage.removeItem('accessToken')
     }
+  }
+
+  handleAuthToken = () => {
+    if (!this.state.accessToken) {
+      delete api.defaults.headers['Authorization']
+      localStorage.removeItem('accessToken')
+      this.setState({
+        user: null
+      })
+    } else {
+      api.defaults.headers['Authorization'] = `Bearer ${this.state.accessToken}`;
+      this.fetchUser()
+    }
+  }
+
+  fetchUser = () => {
+    api.get('Users/current')
+      .then(({data}) => {
+        this.setState({
+          user: {
+            ...data.data,
+            isAdmin: isAdmin(data.data.role)
+          }
+        })
+      }).catch(() => {
+        toast.error(httpErrorCodeToMessage());
+    })
   }
 
   handleManageCottageVisible = (manageCottageVisible) => {
@@ -56,50 +102,61 @@ class AppContextRoot extends Component {
 
   render() {
 
-    const { authToken, manageCottageVisible } = this.state;
+    const {accessToken, manageCottageVisible, user} = this.state;
 
     return (
       <AppContext.Provider value={{
-        authToken,
+        accessToken,
         manageCottageVisible,
+        user,
         handleAuthState: this.handleAuthState,
         handleManageCottageVisible: this.handleManageCottageVisible
       }}>
         <App
           manageCottageVisible={manageCottageVisible}
-          authToken={authToken}
+          accessToken={accessToken}
           handleManageCottageVisible={this.handleManageCottageVisible}
           handleAuthState={this.handleAuthState}
+          user={user}
         />
       </AppContext.Provider>
     );
   }
 }
 
-const App = ({authToken,manageCottageVisible, handleManageCottageVisible, handleAuthState}) => {
+const App = ({
+               accessToken,
+               manageCottageVisible,
+               handleManageCottageVisible,
+               handleAuthState,
+               user,
+             }) => {
 
   return (
     <div className="App">
       <Router>
-        {authToken && <Header />}
+        {!!accessToken && <Header/>}
         <main>
           <Switch>
-            {authToken ?
+            {accessToken ?
               (
                 <>
-                  <Route exact path="/manageUsers">
-                    <ManageUsers />
+                  <Route exact path={`/manageUsers`}>
+                    {user && !user?.isAdmin ?
+                      (<Redirect to={'/'} />)
+                      : <ManageUsers/>
+                    }
                   </Route>
                   <Route exact path="/cottageForm/:cottageId">
-                    <CottageForm />
+                    <CottageForm/>
                   </Route>
                 </>
               ) :
               <>
-                <Route exact path="/auth">
-                  <Auth handleAuthState={handleAuthState} />
+                <Route exact path={`/auth`}>
+                  <Auth handleAuthState={handleAuthState}/>
                 </Route>
-                <Redirect to="/auth" />
+                <Redirect to={`/auth`}/>
               </>
             }
           </Switch>
@@ -109,7 +166,7 @@ const App = ({authToken,manageCottageVisible, handleManageCottageVisible, handle
             wide
             isOpen={true}
             onExit={() => handleManageCottageVisible(false)}>
-            <ManageCottage />
+            <ManageCottage/>
           </Modal>
         )}
       </Router>
@@ -123,8 +180,8 @@ const App = ({authToken,manageCottageVisible, handleManageCottageVisible, handle
 };
 
 App.propTypes = {
-  authToken: PropTypes.string,
+  accessToken: PropTypes.string,
   handleAuthState: PropTypes.func
 };
 
-export default AppContextRoot;
+export default withRouter(AppContextRoot);

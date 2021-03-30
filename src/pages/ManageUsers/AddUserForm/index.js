@@ -6,7 +6,7 @@ import SubmitRow from '../../../components/form/SubmitRow';
 import FormRow from '../../../components/form/FormRow'
 import SelectInput from '../../../components/form/SelectInput';
 
-import { USER_ROLES } from '../../../utils'
+import { USER_ROLES_ARRAY } from '../../../utils/constants'
 
 import {ReactComponent as Refresh} from '../../../assets/icons/refresh.svg';
 
@@ -36,7 +36,7 @@ const AddUserForm = ({ onAdd, onCancel }) => {
           />
         </FormRow>
         <FormRow>
-          <SelectInput onChange={setRole} selectedOption={role} options={USER_ROLES} />
+          <SelectInput onChange={setRole} selectedOption={role} options={USER_ROLES_ARRAY} />
         </FormRow>
         <SubmitRow>
           <Button type={'submit'} disabled={!email.trim().length || !role?.value}>

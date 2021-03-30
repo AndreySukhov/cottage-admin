@@ -3,14 +3,17 @@ import axios from 'axios';
 const headers = {
   Accept: 'application/json',
   'Content-Type': 'application/json',
-  'X-Requested-With': 'XMLHttpRequest'
 };
+
+if (localStorage.getItem('accessToken')) {
+  headers.Authorization = `Bearer ${localStorage.getItem('accessToken')}`
+}
+
 
 export const baseURL = process.env.REACT_APP_API_URL;
 
 const api = axios.create({
   baseURL,
-  withCredentials: true,
   responseType: 'json',
   headers
 });

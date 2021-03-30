@@ -1,14 +1,13 @@
 import React, { useContext } from 'react';
 import {
-  Link
+  Link,
+  useRouteMatch,
 } from 'react-router-dom';
 
-import {
-  withRouter
-} from 'react-router';
 
 import Button from '../../../components/form/Button'
 import { AppContext } from '../../../App'
+import { USER_ROLES } from '../../../utils/constants'
 
 import style from './style.module.css'
 
@@ -18,49 +17,61 @@ import {ReactComponent as Refresh} from '../../../assets/icons/refresh.svg';
 import {ReactComponent as Diskete} from '../../../assets/icons/diskette.svg';
 
 const Header = () => {
-  const context = useContext(AppContext);
+  const {
+    user,
+    handleAuthState,
+    handleManageCottageVisible } = useContext(AppContext);
+  let isFormPage = !!useRouteMatch("/cottageForm/:cottageId")?.isExact;
+
   return (
     <>
       <header className={style.wrap}>
         <div className={style.content}>
-          <div className={style['settings-wrap']}>
-            <Link to={'/manageUsers'} className={`button-clear-style ${style['setting-link']}`}>
-              <Gear />
-            </Link>
-          </div>
+          {user?.isAdmin && (
+            <div className={style['settings-wrap']}>
+              <Link to={`/manageUsers`} className={`button-clear-style ${style['setting-link']}`}>
+                <Gear />
+              </Link>
+            </div>
+          )}
           <div className={style.user}>
-            test@test.test
+            <Link to={'/'}>
+              {user?.email}
+            </Link>
+            <br/>
+            <div>
+              <Button view="text" type="button" onClick={() => {
+                handleAuthState(null);
+              }}>
+                Выход
+              </Button>
+            </div>
           </div>
           <div className={style['add-item']}>
-            <Button view={'dark'} onClick={() => context.handleManageCottageVisible(true)}>
+            <Button view={'dark'} onClick={() => handleManageCottageVisible(true)}>
               Добавить страницу коттеджа
             </Button>
           </div>
           <div className={style['header-actions']}>
             <div className={style['header-actions-item']}>
-              <Button view={'text'} icon={<Excel />}>
+              <Button view={'text'} icon={<Excel />} disabled={!isFormPage}>
                 экспортировать в эксель
               </Button>
             </div>
-            <div className={style['header-actions-item']}>
-              <Button view={'text'} icon={<Refresh />}>
-                отменить изменения
-              </Button>
-            </div>
-            <div className={style['header-actions-item']}>
-              <Button view={'text'} icon={<Diskete />}>
-                сохранить без публикации
-              </Button>
-            </div>
+            {/*<div className={style['header-actions-item']}>*/}
+            {/*  <Button view={'text'} icon={<Refresh />} disabled={!isFormPage}>*/}
+            {/*    отменить изменения*/}
+            {/*  </Button>*/}
+            {/*</div>*/}
           </div>
           <div className={style['header-publish']}>
             <div className={style['header-publish-item']}>
-              <Button view={'bordered'}>
+              <Button view={'bordered'} disabled={!isFormPage}>
                 Предварительный просмотр
               </Button>
             </div>
             <div className={style['header-publish-item']}>
-              <Button>
+              <Button disabled={!isFormPage}>
                 Опубликовать
               </Button>
             </div>
@@ -72,4 +83,4 @@ const Header = () => {
 }
 
 
-export default withRouter(Header);
+export default Header;

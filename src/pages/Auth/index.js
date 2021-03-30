@@ -37,12 +37,16 @@ const Auth = ({handleAuthState}) => {
         email,
         password
       });
-      console.log(res, 'res');
+
+      if (res?.data?.data?.accessToken) {
+        handleAuthState(res.data.data.accessToken)
+      } else {
+        httpErrorCodeToMessage()
+      }
     } catch (e) {
       setPending(false);
-      toast.error(httpErrorCodeToMessage());
+      toast.error(e?.response?.data?.meta?.message || httpErrorCodeToMessage());
     }
-
   };
 
   return (
