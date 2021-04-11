@@ -16,8 +16,20 @@ const ResetPassword = ({ email, onCancel }) => {
 
   const [status, setStatus] = useState('initial');
 
-  const sendRequest = async () => {
+  const sendRequest = () => {
     setStatus('pending')
+    console.log(window.location, 'window.location')
+
+    api.post('Users/restore-password', {
+      email,
+      callBackUrl: `${window.location.origin}/reset-password`
+    })
+      .then(() => {
+        setStatus('success')
+      })
+      .catch(() => {
+        setStatus('error')
+      })
 
   }
 
@@ -27,9 +39,26 @@ const ResetPassword = ({ email, onCancel }) => {
         <TextBlock size={'l'}>
           Ссылка отправлена на указанную почту
         </TextBlock>
+        <Button onClick={onCancel}>
+          закрыть
+        </Button>
       </div>
     )
   }
+
+  if (status === 'error') {
+    return (
+      <div className={style.wrap}>
+        <TextBlock size={'l'}>
+          произошла ошибка, попробуйте позже
+        </TextBlock>
+        <Button onClick={onCancel}>
+          закрыть
+        </Button>
+      </div>
+    )
+  }
+
   return (
     <div className={style.wrap}>
       <div className={style.textWrap}>
@@ -40,9 +69,7 @@ const ResetPassword = ({ email, onCancel }) => {
       {status === 'pending' && (<Preloader />)}
       {status === 'initial' && (
         <SubmitRow align="space-around">
-          <Button onClick={() => {
-            sendRequest()
-          }}>
+          <Button onClick={sendRequest}>
             Да, сбросить пароль
           </Button>
           <Button

@@ -24,6 +24,7 @@ import Modal from "./components/Modal";
 
 import './assets/styles/main.css';
 import {httpErrorCodeToMessage, isAdmin} from "./utils";
+import ResetPassword from "./pages/ResetPassword";
 
 export const AppContext = React.createContext({
   accessToken: '',
@@ -138,6 +139,9 @@ const App = ({
         {!!accessToken && <Header/>}
         <main>
           <Switch>
+            <Route path={'/reset-password'}>
+              <ResetPassword />
+            </Route>
             {accessToken ?
               (
                 <>

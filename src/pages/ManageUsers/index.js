@@ -201,7 +201,9 @@ const ManageUsers = () => {
                       <button
                         disabled={formPending}
                         onClick={() => {
-                          setResetEmail(user.email)
+                          if(user) {
+                            setResetEmail(user.email)
+                          }
                         }}
                         type="button"
                         className={cc(['button-clear-style', style['aside-row-btn'], style['aside-row-btn--reset']])}
