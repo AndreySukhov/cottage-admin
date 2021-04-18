@@ -19,8 +19,6 @@ const BaseInfo = ({onExit, onSuccess, projectId, data = { }}) => {
   const [fileIds, setFileIds] = useState([])
   const history = useHistory()
 
-  console.log(data, 'data')
-
   return (
     <div>
       <Formik

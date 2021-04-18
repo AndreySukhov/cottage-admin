@@ -17,9 +17,6 @@ const processFiles = async (files) => {
       name: file.name
     }
   }));
-
-  console.log(res, 'res')
-
   return res
 }
 

@@ -1,38 +1,36 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useContext, useState, useEffect, Fragment} from 'react';
 import cc from 'classcat';
+import OutsideClickHandler from 'react-outside-click-handler';
+import {toast} from "react-toastify";
 import api from '../../../api'
 
 import Button from '../../../components/form/Button'
 import Input from '../../../components/form/Input'
-import SubmitRow from "../../../components/form/SubmitRow";
 import Preloader from "../../../components/Preloader";
 
 import {AppContext} from "../../../App";
+import RenameProject from './RenameProject'
 
 import style from './style.module.css'
 
 import {ReactComponent as Refresh} from "../../../assets/icons/refresh.svg";
 import {ReactComponent as Burger} from "../../../assets/icons/burger.svg";
+import {httpErrorCodeToMessage} from "../../../utils";
 
 const ManageCottage = () => {
   const context = useContext(AppContext);
 
   const [cottageData, setCottageData] = useState([]);
-  const [newCottageData, setNewCottageData] = useState([]);
   const [mode, setMode] = useState('pending');
   const [contextMenuId, setContextMenuId] = useState(null);
   const [contextMenuActionDetails, setContextMenuActionDetails] = useState(null);
   const [contextActionText, setContextActionText] = useState('');
 
   useEffect(() => {
-
-
-    api.get('Projects')
+    api.get('Project')
       .then((res) => {
-        console.log(res, 'Projects')
         setCottageData(res.data.data)
       })
-
     setMode('initial')
   }, [])
 
@@ -42,11 +40,12 @@ const ManageCottage = () => {
     setContextMenuActionDetails(null)
   }
 
-  const handleActions = ({id, actionType}) => {
+  const handleActions = ({id, actionType, ...rest}) => {
     clearContextMenuData()
     setContextMenuActionDetails({
       id,
-      actionType
+      actionType,
+      ...rest
     })
   }
 
@@ -54,20 +53,45 @@ const ManageCottage = () => {
     clearContextMenuData()
   }
 
+  const handleRemove = (id) => {
+    api.delete(`Project/delete/${id}`)
+      .then((res) => {
+        clearContextMenuData()
+        setCottageData(cottageData.filter((cottage) => cottage.id !== id))
+      }).catch((e) => {
+      console.error(e)
+      toast.error(httpErrorCodeToMessage());
+    })
+  }
+
   if (mode === 'pending') {
     return (<Preloader/>)
   }
 
-  const cottageList = [...cottageData, ...newCottageData]
-
   return (
     <div>
       <div className={style.list}>
-        {cottageList.map((cottage) => {
+        {cottageData.map((cottage) => {
+          if (contextMenuActionDetails?.id === cottage.id) {
+            return (
+              <Fragment key={cottage.id}>
+                <RenameProject
+                  onExit={clearContextMenuData}
+                  onSuccess={(data) => {
+                    setCottageData(cottageData.map((cottage) => {
+                      return data.id === cottage.id ? data : cottage
+                    }))
+                    clearContextMenuData()
+                  }}
+                  cottage={contextMenuActionDetails.cottage}/>
+              </Fragment>
+            )
+          }
+
           return (
             <div className={style['list-row']} key={cottage.id}>
               <div className={style['list-row-value']}>
-                <Input readOnly value={cottage.title} fw/>
+                <Input readOnly value={cottage.name} fw/>
               </div>
               <div className={cc([style['list-row-btn'], style['context-menu-wrap']])}>
                 <Button
@@ -78,10 +102,15 @@ const ManageCottage = () => {
                   <Burger/>
                 </Button>
                 {(contextMenuId === cottage.id) && (
+                  <OutsideClickHandler
+                    onOutsideClick={() => {
+                      clearContextMenuData()
+                    }}
+                  >
                   <div className={style['context-menu']}>
                     <div className={style['context-menu-inner']}>
                       <button
-                        type="button"
+                        onClick={() => handleActions({id: cottage.id, cottage, actionType: 'rename'})}
                         className={cc(['button-clear-style', style['context-menu-item']])}>
                         переименовать
                       </button>
@@ -98,14 +127,13 @@ const ManageCottage = () => {
                       </button>
                       <button
                         type="button"
-                        onClick={() => {
-                          setContextMenuId(null)
-                        }}
+                        onClick={() => handleRemove(cottage.id)}
                         className={cc(['button-clear-style', style['context-menu-item']])}>
                         удалить страницу
                       </button>
                     </div>
                   </div>
+                  </OutsideClickHandler>
                 )}
               </div>
             </div>
@@ -115,9 +143,7 @@ const ManageCottage = () => {
           <div className={style['list-row']}>
             <div className={style['list-row-value']}>
               <Button
-                to={{
-                  pathname: "/cottageForm/new",
-                }}
+                to='/cottageForm/new'
                 onClick={() => context.handleManageCottageVisible(false)}
                 view="add"
                 fw
@@ -140,7 +166,7 @@ const ManageCottage = () => {
               {contextActionText?.trim()?.length > 0 && (
                 <div className={style['autocomplete-list']}>
                   <>
-                    {cottageList.filter(({title}) => {
+                    {cottageData.filter(({title}) => {
                       return title.toLowerCase().includes(contextActionText.toLowerCase())
                     }).map((item) => {
                       return (
@@ -162,14 +188,12 @@ const ManageCottage = () => {
           </div>
         )}
       </div>
-      <SubmitRow>
-        <Button>
-          Сохранить список коттеджей
-        </Button>
+      <div>
+        <br/>
         <Button view={'text'} icon={<Refresh/>} onClick={() => context.handleManageCottageVisible(false)}>
           Отменить
         </Button>
-      </SubmitRow>
+      </div>
     </div>
   )
 }

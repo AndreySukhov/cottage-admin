@@ -71,3 +71,8 @@
 .autocomplete-list-item:hover {
   background-color: rgba(248, 212, 85, 0.3);
 }
+
+.side-btn {
+  width: 16px;
+  height: auto;
+}
