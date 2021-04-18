@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  withRouter
-} from 'react-router';
+  useRouteMatch
+} from 'react-router-dom';
+import {Helmet} from "react-helmet";
 
 import Heading from "../../components/typography/Heading";
 import EmptyBlock from './EmptyBlock'
@@ -11,12 +12,34 @@ import Configuration from './Configuration'
 import BaseInfo from './BaseInfo'
 
 import style from './style.module.css'
-import {Helmet} from "react-helmet";
+import api from '../../api'
+import { getLocalCurrencyStr } from '../../utils'
+import InfoCard from "../../components/InfoCard";
 
 const CottageForm = (props) => {
 
+  const routeMatch = useRouteMatch()
   const [formStep, setFormStep] = useState(null)
   const [baseInfo, setBaseInfo] = useState(null)
+  const [projectId, setProjectId] = useState(null)
+
+  useEffect(() => {
+    if (routeMatch?.params?.cottageId && routeMatch.params.cottageId !== 'new') {
+      setProjectId(routeMatch.params.cottageId)
+    }
+  }, [routeMatch?.params?.cottageId])
+
+  useEffect(() => {
+    const id = routeMatch?.params?.cottageId
+
+    if (id && id !== 'new') {
+      // fetch data
+      api.get(`Project/get/${id}`)
+        .then((res) => {
+          setBaseInfo(res.data.data)
+        })
+    }
+  }, [])
 
   return (
     <div className={style['page-wrap']}>
@@ -29,26 +52,39 @@ const CottageForm = (props) => {
         <Heading level={2}>
           Базовые параметры
         </Heading>
-        <EmptyBlock
-          onClick={() => setFormStep('baseInfo')}
-          text={'Добавить базовую информацию о коттедже'} />
+        {baseInfo ? (
+          <InfoCard
+            onClick={() => setFormStep('baseInfo')}
+            rightAside={getLocalCurrencyStr(baseInfo.price)}>
+            {baseInfo.description}
+          </InfoCard>
+        )
+        : (
+            <EmptyBlock
+              onClick={() => setFormStep('baseInfo')}
+              text={'Добавить базовую информацию о коттедже'} />
+          )}
       </div>
-      <div className={style['page-row']}>
-        <Heading level={2}>
-          Конфигурации
-        </Heading>
-        <EmptyBlock
-          onClick={() => setFormStep('configuration')}
-          text={'Добавить карточку конструктива и опции'} />
-      </div>
-      <div className={style['page-row']}>
-        <Heading level={2}>
-          Строительная документация
-        </Heading>
-        <EmptyBlock
-          onClick={() => setFormStep('documentation')}
-          text={'Добавить карточку строительной документации'} />
-      </div>
+      {projectId && (
+        <>
+          <div className={style['page-row']}>
+            <Heading level={2}>
+              Конфигурации
+            </Heading>
+            <EmptyBlock
+              onClick={() => setFormStep('configuration')}
+              text={'Добавить карточку конструктива и опции'} />
+          </div>
+          <div className={style['page-row']}>
+            <Heading level={2}>
+              Строительная документация
+            </Heading>
+            <EmptyBlock
+              onClick={() => setFormStep('documentation')}
+              text={'Добавить карточку строительной документации'} />
+          </div>
+        </>
+      )}
       {formStep && (
         <Modal
           onExit={() => setFormStep(null)}
@@ -56,16 +92,24 @@ const CottageForm = (props) => {
           isOpen>
           {formStep === 'baseInfo' && (
             <BaseInfo
+              projectId={projectId}
+              onSuccess={(data) => {
+                setBaseInfo(data)
+                setFormStep(null)
+              }}
+              data={baseInfo}
               onExit={() => setFormStep(null)}
             />
           )}
           {formStep === 'configuration' && (
             <Configuration
+              projectId={projectId}
               onExit={() => setFormStep(null)}
             />
           )}
           {formStep === 'documentation' && (
             <Documentation
+              projectId={projectId}
               onExit={() => setFormStep(null)}
             />
           )}
@@ -75,4 +119,4 @@ const CottageForm = (props) => {
   )
 }
 
-export default withRouter(CottageForm);
+export default CottageForm;

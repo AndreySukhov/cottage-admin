@@ -8,7 +8,14 @@ const isAdmin = (role) => {
   return role === USER_ROLES.Admin.value
 }
 
+const getLocalCurrencyStr = (num) => (
+  num.toLocaleString('ru-RU', {
+    style: 'currency', currency: 'rub',
+  }).replace(',00', '')
+);
+
 export {
   httpErrorCodeToMessage,
   isAdmin,
+  getLocalCurrencyStr,
 }

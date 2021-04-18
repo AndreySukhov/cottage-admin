@@ -1,0 +1,43 @@
+.wrap {
+  border: 1px solid #828282;
+  background: #fff;
+  padding: 30px 12px;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+}
+
+.btn {
+  padding: 0;
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  margin-right: 18px;
+  height: 10px;
+  margin-top: -7px;
+  font-weight: 700;
+  display: block;
+  line-height: 10px;
+}
+
+.body {
+  flex: 1;
+  overflow: hidden;
+
+}
+
+.text {
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block; /* for inline elements e.g. span, strong, em etc */
+  text-overflow: ellipsis;
+  margin-right: 15px;
+  width: calc(100% - 30px);
+  vertical-align: middle;
+}
+
+.rightAside {
+  margin-left: auto;
+}

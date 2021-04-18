@@ -45,14 +45,9 @@ const ResetPassword = () => {
     const token = params.get('token')
     const email = params.get('email')
 
-    api.post('/api/v1/Users/reset-password', {
+    api.post(`Users/reset-password?token=${token}&email=${email}`, {
       password,
-      confirmPassword
-    }, {
-      headers: {
-        token,
-        email,
-      }
+      confirmPassword,
     }).then(() => {
       history.push('/');
       toast.success('Пароль сброшен, пройдите авторизацию');

@@ -18,8 +18,6 @@ const ResetPassword = ({ email, onCancel }) => {
 
   const sendRequest = () => {
     setStatus('pending')
-    console.log(window.location, 'window.location')
-
     api.post('Users/restore-password', {
       email,
       callBackUrl: `${window.location.origin}/reset-password`

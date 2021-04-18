@@ -1,6 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {Formik} from 'formik';
+import {toast} from "react-toastify";
+import {
+  useHistory
+} from 'react-router-dom';
 
+import api from '../../../api'
 import Input from '../../../components/form/Input';
 import Button from '../../../components/form/Button';
 import SubmitRow from '../../../components/form/SubmitRow';
@@ -8,16 +13,51 @@ import FormRow from '../../../components/form/FormRow'
 import FileUpload from '../../../components/form/FileUpload'
 
 import {ReactComponent as Refresh} from "../../../assets/icons/refresh.svg";
+import {httpErrorCodeToMessage} from "../../../utils";
 
-const BaseInfo = ({onExit}) => {
+const BaseInfo = ({onExit, onSuccess, projectId, data = { }}) => {
+  const [fileIds, setFileIds] = useState([])
+  const history = useHistory()
+
+  console.log(data, 'data')
+
   return (
     <div>
       <Formik
-        initialValues={{description: '', price: ''}}
-        onSubmit={(values, {setSubmitting}) => {
-          setTimeout(() => {
+        initialValues={{
+          description: data.description || '',
+          price: data.price || '',
+          name: data.name || '',
+        }}
+        onSubmit={({name, description, price}, {setSubmitting}) => {
+
+          let method = 'post'
+          let url = 'Project/create'
+
+          if (projectId) {
+            method = 'put'
+            url = `Project/update/${projectId}`
+          }
+
+          api[method](url, {
+            name,
+            description,
+            price,
+            files: fileIds
+          }).then((res) => {
+            history.push(`/cottageForm/${res.data.data.id}`)
+            onSuccess({
+              name,
+              description,
+              price,
+              files: fileIds
+            })
             setSubmitting(false);
-          }, 400);
+          }).catch((e) => {
+            console.error(e)
+            toast.error(httpErrorCodeToMessage());
+            setSubmitting(false);
+          })
         }}
       >
         {({
@@ -27,6 +67,15 @@ const BaseInfo = ({onExit}) => {
           isSubmitting,
         }) => (
           <form onSubmit={handleSubmit}>
+            <FormRow>
+              <Input
+                fw
+                placeholder={'Название'}
+                name="name"
+                onChange={handleChange}
+                value={values.name}
+              />
+            </FormRow>
             <FormRow>
               <Input
                 fw
@@ -42,6 +91,10 @@ const BaseInfo = ({onExit}) => {
                 options={{
                   accept: 'image/jpeg, image/png',
                   maxFiles:5
+                }}
+                defaultFiles={data.files || []}
+                onSuccess={(fileIds) => {
+                  setFileIds(fileIds)
                 }}
                 previewText={'Перетащите сюда файлы строительной документации документации'}/>
             </FormRow>

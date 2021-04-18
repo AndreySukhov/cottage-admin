@@ -37,7 +37,7 @@ const ManageUsers = () => {
 
   const getUsers = () => {
     setStatus('pending')
-    api.get('/Users').then(({data}) => {
+    api.get('Users').then(({data}) => {
       setUsers(data.data.map((user) => {
         return {
           ...user,
