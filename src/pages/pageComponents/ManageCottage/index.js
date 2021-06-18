@@ -29,6 +29,7 @@ const ManageCottage = () => {
   useEffect(() => {
     api.get('Project')
       .then((res) => {
+        console.log(res, res)
         setCottageData(res.data.data)
       })
     setMode('initial')
@@ -72,9 +73,10 @@ const ManageCottage = () => {
     <div>
       <div className={style.list}>
         {cottageData.map((cottage) => {
+
           if (contextMenuActionDetails?.id === cottage.id) {
             return (
-              <Fragment key={cottage.id}>
+              <Fragment key={cottage?.id}>
                 <RenameProject
                   onExit={clearContextMenuData}
                   onSuccess={(data) => {
@@ -89,9 +91,9 @@ const ManageCottage = () => {
           }
 
           return (
-            <div className={style['list-row']} key={cottage.id}>
+            <div className={style['list-row']} key={cottage?.id}>
               <div className={style['list-row-value']}>
-                <Input readOnly value={cottage.name} fw/>
+                <Input readOnly value={cottage?.name} fw/>
               </div>
               <div className={cc([style['list-row-btn'], style['context-menu-wrap']])}>
                 <Button
@@ -110,7 +112,7 @@ const ManageCottage = () => {
                   <div className={style['context-menu']}>
                     <div className={style['context-menu-inner']}>
                       <button
-                        onClick={() => handleActions({id: cottage.id, cottage, actionType: 'rename'})}
+                        onClick={() => handleActions({id: cottage?.id, cottage, actionType: 'rename'})}
                         className={cc(['button-clear-style', style['context-menu-item']])}>
                         переименовать
                       </button>
@@ -121,13 +123,13 @@ const ManageCottage = () => {
                       </button>
                       <button
                         type="button"
-                        onClick={() => handleActions({id: cottage.id, actionType: 'link'})}
+                        onClick={() => handleActions({id: cottage?.id, actionType: 'link'})}
                         className={cc(['button-clear-style', style['context-menu-item']])}>
                         связать с
                       </button>
                       <button
                         type="button"
-                        onClick={() => handleRemove(cottage.id)}
+                        onClick={() => handleRemove(cottage?.id)}
                         className={cc(['button-clear-style', style['context-menu-item']])}>
                         удалить страницу
                       </button>

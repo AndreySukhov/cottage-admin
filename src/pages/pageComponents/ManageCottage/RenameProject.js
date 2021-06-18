@@ -10,7 +10,8 @@ import api from "../../../api";
 import style from "./style.module.css";
 
 const RenameProject = ({cottage, onSuccess}) => {
-  const [name, setName] = useState(cottage.name)
+  const [name, setName] = useState(cottage?.name || '')
+  console.log(cottage, 'cottage')
 
   const handleSave = () => {
     api.put(`Project/update/${cottage.id}`, {
