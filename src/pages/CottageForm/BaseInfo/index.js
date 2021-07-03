@@ -18,14 +18,10 @@ import {httpErrorCodeToMessage} from "../../../utils";
 const BaseInfo = ({onExit, onSuccess, projectId, data = { }}) => {
   const [fileIds, setFileIds] = useState([])
   const history = useHistory()
-  console.log(data, 'data')
-
   return (
     <div>
       <Formik
         initialValues={{
-          description: data?.description || '',
-          price: data?.price || '',
           name: data?.name || '',
         }}
         onSubmit={({name, description, price}, {setSubmitting}) => {
@@ -95,7 +91,7 @@ const BaseInfo = ({onExit, onSuccess, projectId, data = { }}) => {
                 onSuccess={(fileIds) => {
                   setFileIds(fileIds)
                 }}
-                previewText={'Перетащите сюда файлы строительной документации документации'}/>
+                previewText={'Перетащите сюда файлы строительной документации'}/>
             </FormRow>
             <FormRow>
               <Input

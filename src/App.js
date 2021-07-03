@@ -170,7 +170,7 @@ const App = ({
             wide
             isOpen={true}
             onExit={() => handleManageCottageVisible(false)}>
-            <ManageCottage/>
+            <ManageCottage onClose={() => handleManageCottageVisible(false)}/>
           </Modal>
         )}
       </Router>

@@ -7,13 +7,13 @@ import {Helmet} from "react-helmet";
 import Heading from "../../components/typography/Heading";
 import EmptyBlock from './EmptyBlock'
 import Modal from "../../components/Modal";
-import Documentation from './Documentation'
 import Configuration from './Configuration'
 import BaseInfo from './BaseInfo'
+import OptionsPreview from './OptionsPreview'
 
 import style from './style.module.css'
 import api from '../../api'
-import { getLocalCurrencyStr } from '../../utils'
+import { getLocalCurrencyStr, declension } from '../../utils'
 import InfoCard from "../../components/InfoCard";
 
 const CottageForm = (props) => {
@@ -21,6 +21,8 @@ const CottageForm = (props) => {
   const routeMatch = useRouteMatch()
   const [formStep, setFormStep] = useState(null)
   const [baseInfo, setBaseInfo] = useState(null)
+  const [constructiveInfo, setConstructiveInfo] = useState(null)
+  const [activeConstructiveData, setActiveConstructiveData] = useState(null)
   const [projectId, setProjectId] = useState(null)
 
   useEffect(() => {
@@ -38,8 +40,13 @@ const CottageForm = (props) => {
         .then((res) => {
           setBaseInfo(res.data.data)
         })
+
+      api.get(`Project/${id}/constructives`)
+        .then((res) => {
+          setConstructiveInfo(res.data.data)
+        })
     }
-  }, [])
+  }, [routeMatch?.params?.cottageId])
 
   return (
     <div className={style['page-wrap']}>
@@ -50,19 +57,30 @@ const CottageForm = (props) => {
       </Helmet>
       <div className={style['page-row']}>
         <Heading level={2}>
-          Базовые параметры
+          Базовые параметры и строительная документация
         </Heading>
         {baseInfo ? (
           <InfoCard
-            onClick={() => setFormStep('baseInfo')}
+            onClick={(constructiveData) => {
+              setActiveConstructiveData(constructiveData)
+              setFormStep('baseInfo')
+            }}
             rightAside={getLocalCurrencyStr(baseInfo.price)}>
+            {baseInfo.files?.length > 0 && (
+              <>
+                {baseInfo.files.length}
+                {' '}
+                {declension(['файл', 'файла', 'файлов'], baseInfo.files.length)}
+                {' '}
+              </>
+            )}
             {baseInfo.description}
           </InfoCard>
         )
         : (
             <EmptyBlock
               onClick={() => setFormStep('baseInfo')}
-              text={'Добавить базовую информацию о коттедже'} />
+              text={'Добавить базовую информацию и строительную документацию'} />
           )}
       </div>
       {projectId && (
@@ -71,17 +89,18 @@ const CottageForm = (props) => {
             <Heading level={2}>
               Конфигурации
             </Heading>
-            <EmptyBlock
-              onClick={() => setFormStep('configuration')}
-              text={'Добавить карточку конструктива и опции'} />
-          </div>
-          <div className={style['page-row']}>
-            <Heading level={2}>
-              Строительная документация
-            </Heading>
-            <EmptyBlock
-              onClick={() => setFormStep('documentation')}
-              text={'Добавить карточку строительной документации'} />
+            {constructiveInfo ? (
+                <OptionsPreview
+                  onConstructiveClick={(activeConstructiveData) => {
+                    setFormStep('configuration')
+                    setActiveConstructiveData(activeConstructiveData)
+                  }}
+                  constructiveInfo={constructiveInfo}/>
+            ) : (
+              <EmptyBlock
+                onClick={() => setFormStep('configuration')}
+                text={'Добавить карточку конструктива и опции'} />
+            )}
           </div>
         </>
       )}
@@ -103,14 +122,15 @@ const CottageForm = (props) => {
           )}
           {formStep === 'configuration' && (
             <Configuration
-              projectId={projectId}
-              onExit={() => setFormStep(null)}
-            />
-          )}
-          {formStep === 'documentation' && (
-            <Documentation
-              projectId={projectId}
-              onExit={() => setFormStep(null)}
+              projectId={Number(projectId)}
+              activeConstructiveData={activeConstructiveData}
+              setConstructiveInfo={(data) => {
+                console.log(data, 'data')
+              }}
+              onExit={() => {
+                setFormStep(null)
+                setActiveConstructiveData(null)
+              }}
             />
           )}
         </Modal>

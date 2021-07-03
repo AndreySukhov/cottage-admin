@@ -5,25 +5,48 @@ import Input from '../../../components/form/Input';
 import Button from '../../../components/form/Button';
 import SubmitRow from '../../../components/form/SubmitRow';
 import FormRow from '../../../components/form/FormRow'
-import FileUpload from '../../../components/form/FileUpload'
-
+import TextBlock from '../../../components/typography/TextBlock'
+import OptionForm from "../OptionForm";
 import {ReactComponent as Refresh} from "../../../assets/icons/refresh.svg";
+import api from "../../../api";
+import {toast} from "react-toastify";
+import {httpErrorCodeToMessage} from "../../../utils";
 
-const Configuration = ({onExit}) => {
+const Configuration = ({
+   onExit,
+   projectId,
+   activeConstructiveData,
+   setConstructiveInfo,
+}) => {
   return (
     <div>
       <Formik
         initialValues={{
-          constructive: '',
           description: '',
-          name: '',
-          price: '',
-          vendorCode: ''
+          name: activeConstructiveData.name,
         }}
         onSubmit={(values, {setSubmitting}) => {
-          setTimeout(() => {
+          setSubmitting(true)
+
+          let method = 'post'
+          let url = 'Constructives/create'
+
+          if (activeConstructiveData?.id) {
+            method = 'put'
+            url = `Constructives/update/${activeConstructiveData.id}`
+          }
+          api[method](url, {
+            name: values.name,
+            projectId
+          }).then((res) => {
+            setConstructiveInfo(res.data.data)
             setSubmitting(false);
-          }, 400);
+          }).catch((e) => {
+            console.error(e)
+            toast.error(httpErrorCodeToMessage());
+            setSubmitting(false);
+          })
+
         }}
       >
         {({
@@ -36,68 +59,15 @@ const Configuration = ({onExit}) => {
             <FormRow>
               <Input
                 fw
-                placeholder={'Конструктив'}
-                name="constructive"
-                onChange={handleChange}
-                value={values.constructive}
-              />
-            </FormRow>
-            <FormRow>
-              <Input
-                fw
-                placeholder={'Название'}
+                placeholder={'Название конструктива'}
                 name="name"
                 onChange={handleChange}
                 value={values.name}
               />
             </FormRow>
-            <FormRow>
-              <Input
-                fw
-                name="price"
-                placeholder={'Цена'}
-                type={'number'}
-                onChange={handleChange}
-                value={values.price}
-              />
-            </FormRow>
-            <FormRow>
-              <Input
-                fw
-                textarea
-                placeholder={'Описание'}
-                name="description"
-                onChange={handleChange}
-                value={values.description}
-              />
-            </FormRow>
-            <FormRow>
-              <FileUpload
-                previewText={'изображение'}/>
-            </FormRow>
-            <FormRow>
-              <Input
-                fw
-                name="price"
-                placeholder={'Цена'}
-                type={'number'}
-                onChange={handleChange}
-                value={values.price}
-              />
-            </FormRow>
-            <FormRow>
-              <Input
-                fw
-                name="vendorCode"
-                placeholder={'Артикул'}
-                type={'number'}
-                onChange={handleChange}
-                value={values.vendorCode}
-              />
-            </FormRow>
             <SubmitRow>
               <Button type={'submit'} disabled={isSubmitting}>
-                Сохранить
+                {activeConstructiveData ? 'Редактировать' : 'Сохранить'}
               </Button>
               <Button view={'text'} type={'button'} onClick={onExit} icon={<Refresh />}>
                 Отменить
@@ -106,6 +76,12 @@ const Configuration = ({onExit}) => {
           </form>
         )}
       </Formik>
+      <br/>
+      {!activeConstructiveData && (
+        <TextBlock>
+          Для добавления опций необходимо создать конструктив
+        </TextBlock>
+      )}
     </div>
   )
 }

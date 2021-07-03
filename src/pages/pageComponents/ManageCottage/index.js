@@ -2,6 +2,9 @@ import React, {useContext, useState, useEffect, Fragment} from 'react';
 import cc from 'classcat';
 import OutsideClickHandler from 'react-outside-click-handler';
 import {toast} from "react-toastify";
+import {
+  Link
+} from 'react-router-dom';
 import api from '../../../api'
 
 import Button from '../../../components/form/Button'
@@ -17,7 +20,7 @@ import {ReactComponent as Refresh} from "../../../assets/icons/refresh.svg";
 import {ReactComponent as Burger} from "../../../assets/icons/burger.svg";
 import {httpErrorCodeToMessage} from "../../../utils";
 
-const ManageCottage = () => {
+const ManageCottage = ({onClose}) => {
   const context = useContext(AppContext);
 
   const [cottageData, setCottageData] = useState([]);
@@ -27,9 +30,9 @@ const ManageCottage = () => {
   const [contextActionText, setContextActionText] = useState('');
 
   useEffect(() => {
+    setMode('pending')
     api.get('Project')
       .then((res) => {
-        console.log(res, res)
         setCottageData(res.data.data)
       })
     setMode('initial')
@@ -59,6 +62,21 @@ const ManageCottage = () => {
       .then((res) => {
         clearContextMenuData()
         setCottageData(cottageData.filter((cottage) => cottage.id !== id))
+      }).catch((e) => {
+      console.error(e)
+      toast.error(httpErrorCodeToMessage());
+    })
+  }
+
+  const handleDuplicate = (id) => {
+    if (!id) {
+      return false
+    }
+
+    api.post(`Project/${id}/duplicate`)
+      .then((res) => {
+        clearContextMenuData()
+        setCottageData([...cottageData, res.data.data])
       }).catch((e) => {
       console.error(e)
       toast.error(httpErrorCodeToMessage());
@@ -111,6 +129,11 @@ const ManageCottage = () => {
                   >
                   <div className={style['context-menu']}>
                     <div className={style['context-menu-inner']}>
+                      <Link to={`/cottageForm/${cottage.id}`}
+                            onClick={onClose}
+                            className={cc(['button-clear-style', style['context-menu-item']])}>
+                        редактировать
+                      </Link>
                       <button
                         onClick={() => handleActions({id: cottage?.id, cottage, actionType: 'rename'})}
                         className={cc(['button-clear-style', style['context-menu-item']])}>
@@ -118,6 +141,7 @@ const ManageCottage = () => {
                       </button>
                       <button
                         type="button"
+                        onClick={() => handleDuplicate(cottage?.id)}
                         className={cc(['button-clear-style', style['context-menu-item']])}>
                         дублировать
                       </button>
