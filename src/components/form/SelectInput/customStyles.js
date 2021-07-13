@@ -11,7 +11,7 @@ export const style = {
     opacity: 0
   }),
   placeholder: () => ({
-    color: `var(--black)`,
+    color: 'var(--black)',
     margin: '0'
   }),
   dropdownIndicator: () => ({
@@ -21,7 +21,7 @@ export const style = {
   }),
   menuList: (provided) => ({
     ...provided,
-    maxHeight: `165px`,
+    maxHeight: '165px',
     padding: 0
   }),
   valueContainer: () => ({
@@ -34,4 +34,4 @@ export const style = {
     overflow: 'hidden',
     boxSizing: 'border-box'
   })
-}
+};

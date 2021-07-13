@@ -3,29 +3,34 @@
 }
 
 .dropzone {
-
-  min-height: 190px;
-  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  background: var(--white);
-  border: 1px dashed #AAAAAA;
+
   box-sizing: border-box;
-  border-radius: 4px;
+  width: 100%;
+
+  min-height: 190px;
+  padding: 20px;
+
+  transition:
+    border-color var(--defaultTransitionTime) var(--defaultTransitionType),
+    background-color var(--defaultTransitionTime) var(--defaultTransitionType);
   text-align: center;
+
+  color: var(--inputPlaceholder);
+  border: 1px dashed #aaa;
+  border-radius: 4px;
+  outline: none;
+  background: var(--white);
+
   font-family: var(--Inter);
   font-size: 1rem;
-  color: var(--inputPlaceholder);
-  outline: none;
-  transition: border-color var(--defaultTransitionTime) var(--defaultTransitionType),
-              background-color var(--defaultTransitionTime) var(--defaultTransitionType);
 }
 
 .dropzone:focus {
-  background: rgba(250, 223, 128, 0.3);
   border-color: var(--black);
+  background: rgba(250, 223, 128, 0.3);
 }
 
 .preview-text {
@@ -42,30 +47,30 @@
   display: grid;
   grid-gap: 16px;
   grid-template-columns: repeat(auto-fill, 240px);
+
   margin-bottom: 24px;
 }
 
-
 .file-card {
   position: relative;
+
   padding: 7px 30px 7px 30px;
+
   color: #000;
   border: 1px solid #828282;
 }
 
 .file-delete {
-  padding: 0;
-  background: transparent;
-  border: none;
+  position: absolute;
+  top: 50%;
+  right: 5px;
 
   width: 24px;
   height: 24px;
 
-  position: absolute;
-  right: 5px;
-  top: 50%;
-
   margin-top: -12px;
+  padding: 0;
+
+  border: none;
+  background: transparent;
 }
-
-

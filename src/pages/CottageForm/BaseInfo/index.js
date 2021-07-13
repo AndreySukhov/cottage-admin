@@ -1,37 +1,39 @@
 import React, { useState } from 'react';
 import {Formik} from 'formik';
-import {toast} from "react-toastify";
+import {toast} from 'react-toastify';
 import {
   useHistory
 } from 'react-router-dom';
 
-import api from '../../../api'
+import api from '../../../api';
 import Input from '../../../components/form/Input';
 import Button from '../../../components/form/Button';
 import SubmitRow from '../../../components/form/SubmitRow';
-import FormRow from '../../../components/form/FormRow'
-import FileUpload from '../../../components/form/FileUpload'
+import FormRow from '../../../components/form/FormRow';
+import FileUpload from '../../../components/form/FileUpload';
 
-import {ReactComponent as Refresh} from "../../../assets/icons/refresh.svg";
-import {httpErrorCodeToMessage} from "../../../utils";
+import {ReactComponent as Refresh} from '../../../assets/icons/refresh.svg';
+import {httpErrorCodeToMessage, clearRemovedFiles} from '../../../utils';
 
 const BaseInfo = ({onExit, onSuccess, projectId, data = { }}) => {
-  const [fileIds, setFileIds] = useState([])
-  const history = useHistory()
+  const [fileIds, setFileIds] = useState([]);
+  const history = useHistory();
   return (
     <div>
       <Formik
         initialValues={{
           name: data?.name || '',
+          price: data?.price || '',
+          description: data?.description || ''
         }}
         onSubmit={({name, description, price}, {setSubmitting}) => {
 
-          let method = 'post'
-          let url = 'Project/create'
+          let method = 'post';
+          let url = 'Project/create';
 
           if (projectId) {
-            method = 'put'
-            url = `Project/update/${projectId}`
+            method = 'put';
+            url = `Project/update/${projectId}`;
           }
 
           api[method](url, {
@@ -40,19 +42,23 @@ const BaseInfo = ({onExit, onSuccess, projectId, data = { }}) => {
             price,
             files: fileIds
           }).then((res) => {
-            history.push(`/cottageForm/${res.data.data.id}`)
+            if (data?.files.length) {
+              const initialFileIds = data?.files.map(({id}) => id);
+              clearRemovedFiles(initialFileIds, fileIds);
+            }
+            history.push(`/cottageForm/${res.data.data.id}`);
             onSuccess({
               name,
               description,
               price,
               files: fileIds
-            })
+            });
             setSubmitting(false);
           }).catch((e) => {
-            console.error(e)
-            toast.error(httpErrorCodeToMessage());
+            console.error(e);
+            toast.error(e?.response?.data?.meta?.message || httpErrorCodeToMessage(e?.response?.status));
             setSubmitting(false);
-          })
+          });
         }}
       >
         {({
@@ -89,7 +95,7 @@ const BaseInfo = ({onExit, onSuccess, projectId, data = { }}) => {
                 }}
                 defaultFiles={data?.files || []}
                 onSuccess={(fileIds) => {
-                  setFileIds(fileIds)
+                  setFileIds(fileIds);
                 }}
                 previewText={'Перетащите сюда файлы строительной документации'}/>
             </FormRow>
@@ -101,6 +107,16 @@ const BaseInfo = ({onExit, onSuccess, projectId, data = { }}) => {
                 type={'number'}
                 onChange={handleChange}
                 value={values.price}
+              />
+            </FormRow>
+            <FormRow>
+              <Input
+                fw
+                textarea
+                name="description"
+                placeholder={'Описание'}
+                onChange={handleChange}
+                value={values.description}
               />
             </FormRow>
             <SubmitRow>
@@ -115,7 +131,7 @@ const BaseInfo = ({onExit, onSuccess, projectId, data = { }}) => {
         )}
       </Formik>
     </div>
-  )
-}
+  );
+};
 
-export default BaseInfo
+export default BaseInfo;

@@ -4,48 +4,48 @@ import {Formik} from 'formik';
 import Input from '../../../components/form/Input';
 import Button from '../../../components/form/Button';
 import SubmitRow from '../../../components/form/SubmitRow';
-import FormRow from '../../../components/form/FormRow'
-import TextBlock from '../../../components/typography/TextBlock'
-import OptionForm from "../OptionForm";
-import {ReactComponent as Refresh} from "../../../assets/icons/refresh.svg";
-import api from "../../../api";
-import {toast} from "react-toastify";
-import {httpErrorCodeToMessage} from "../../../utils";
+import FormRow from '../../../components/form/FormRow';
+import TextBlock from '../../../components/typography/TextBlock';
+import OptionForm from '../OptionForm';
+import {ReactComponent as Refresh} from '../../../assets/icons/refresh.svg';
+import api from '../../../api';
+import {toast} from 'react-toastify';
+import {httpErrorCodeToMessage} from '../../../utils';
 
 const Configuration = ({
-   onExit,
-   projectId,
-   activeConstructiveData,
-   setConstructiveInfo,
+  onExit,
+  projectId,
+  activeConstructiveData,
+  setConstructiveInfo,
 }) => {
   return (
     <div>
       <Formik
         initialValues={{
           description: '',
-          name: activeConstructiveData.name,
+          name: activeConstructiveData?.name,
         }}
         onSubmit={(values, {setSubmitting}) => {
-          setSubmitting(true)
+          setSubmitting(true);
 
-          let method = 'post'
-          let url = 'Constructives/create'
+          let method = 'post';
+          let url = 'Constructives/create';
 
           if (activeConstructiveData?.id) {
-            method = 'put'
-            url = `Constructives/update/${activeConstructiveData.id}`
+            method = 'put';
+            url = `Constructives/update/${activeConstructiveData.id}`;
           }
           api[method](url, {
             name: values.name,
             projectId
           }).then((res) => {
-            setConstructiveInfo(res.data.data)
+            setConstructiveInfo(res.data.data);
             setSubmitting(false);
           }).catch((e) => {
-            console.error(e)
-            toast.error(httpErrorCodeToMessage());
+            console.error(e);
+            toast.error(httpErrorCodeToMessage(e?.response?.status));
             setSubmitting(false);
-          })
+          });
 
         }}
       >
@@ -83,7 +83,7 @@ const Configuration = ({
         </TextBlock>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Configuration
+export default Configuration;

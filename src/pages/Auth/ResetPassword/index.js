@@ -1,35 +1,35 @@
-import React, { useState } from 'react'
-import Button from "../../../components/form/Button";
-import TextBlock from "../../../components/typography/TextBlock";
+import React, { useState } from 'react';
+import Button from '../../../components/form/Button';
+import TextBlock from '../../../components/typography/TextBlock';
 import PropTypes from 'prop-types';
 
-import Preloader from "../../../components/Preloader";
+import Preloader from '../../../components/Preloader';
 import SubmitRow from '../../../components/form/SubmitRow';
 
 import api from '../../../api';
 
-import style from './style.module.css'
+import style from './style.module.css';
 
-import {ReactComponent as RefreshEmpty} from "../../../assets/icons/refresh-empty.svg";
+import {ReactComponent as RefreshEmpty} from '../../../assets/icons/refresh-empty.svg';
 
 const ResetPassword = ({ email, onCancel }) => {
 
   const [status, setStatus] = useState('initial');
 
   const sendRequest = () => {
-    setStatus('pending')
+    setStatus('pending');
     api.post('Users/restore-password', {
       email,
       callBackUrl: `${window.location.origin}/reset-password`
     })
       .then(() => {
-        setStatus('success')
+        setStatus('success');
       })
       .catch(() => {
-        setStatus('error')
-      })
+        setStatus('error');
+      });
 
-  }
+  };
 
   if (status === 'success') {
     return (
@@ -41,7 +41,7 @@ const ResetPassword = ({ email, onCancel }) => {
           закрыть
         </Button>
       </div>
-    )
+    );
   }
 
   if (status === 'error') {
@@ -54,7 +54,7 @@ const ResetPassword = ({ email, onCancel }) => {
           закрыть
         </Button>
       </div>
-    )
+    );
   }
 
   return (
@@ -80,12 +80,12 @@ const ResetPassword = ({ email, onCancel }) => {
         </SubmitRow>
       )}
     </div>
-  )
-}
+  );
+};
 
 ResetPassword.propTypes = {
   email: PropTypes.string,
   onCancel: PropTypes.func
-}
+};
 
-export default ResetPassword
+export default ResetPassword;

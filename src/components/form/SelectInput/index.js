@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 
-import { style } from './customStyles'
+import { style } from './customStyles';
 
 const SelectInput = ({selectedOption, handleChange, options,disabled, placeholder, ...props}) => {
   return (
@@ -17,13 +17,13 @@ const SelectInput = ({selectedOption, handleChange, options,disabled, placeholde
       {...props}
     />
   );
-}
+};
 
 SelectInput.defaultProps = {
   handleChange: () => {},
   options: [],
   selectedOption: {},
-}
+};
 
 SelectInput.propTypes = {
   disabled: PropTypes.bool,
@@ -34,6 +34,6 @@ SelectInput.propTypes = {
   options: PropTypes.array,
 
   selectedOption: PropTypes.object,
-}
+};
 
-export default SelectInput
+export default SelectInput;

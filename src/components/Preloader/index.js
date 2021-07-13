@@ -1,4 +1,4 @@
-import './style.css'
+import './style.css';
 
 const Preloader = ({ size = 80, color = 'yellow' }) => {
 
@@ -29,7 +29,7 @@ const Preloader = ({ size = 80, color = 'yellow' }) => {
         width: `${divSize}px`,
       }} />
     </div>
-  )
-}
+  );
+};
 
-export default Preloader
+export default Preloader;

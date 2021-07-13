@@ -1,14 +1,14 @@
-import React from 'react'
-import cc from 'classcat'
+import React from 'react';
+import cc from 'classcat';
 
-import css from './style.module.css'
+import css from './style.module.css';
 
 const FormRow = ({ className, lastRow, submitRow,  ...props }) => {
 
   return <div className={cc([css.formRow, className, {
     [`${css['last-row']}`]: !!lastRow,
     [`${css['submit-row']}`]: !!submitRow,
-  }])} {...props} />
-}
+  }])} {...props} />;
+};
 
-export default FormRow
+export default FormRow;

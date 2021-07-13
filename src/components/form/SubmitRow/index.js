@@ -1,6 +1,6 @@
 import React, { Children } from 'react';
 
-import style from './style.module.css'
+import style from './style.module.css';
 
 const SubmitRow = ({ align = 'center', children }) => {
   return (
@@ -10,10 +10,10 @@ const SubmitRow = ({ align = 'center', children }) => {
           <div className={style['submit-row-item']} key={i}>
             {child}
           </div>
-        )
+        );
       })}
     </div>
-  )
-}
+  );
+};
 
 export default SubmitRow;

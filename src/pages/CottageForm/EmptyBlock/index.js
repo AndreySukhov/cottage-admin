@@ -1,9 +1,9 @@
 import React from 'react';
-import cc from 'classcat'
+import cc from 'classcat';
 
-import TextBlock from '../../../components/typography/TextBlock'
+import TextBlock from '../../../components/typography/TextBlock';
 
-import style from './style.module.css'
+import style from './style.module.css';
 
 const EmptyBlock = ({ text, onClick = () => {} }) => {
   return (
@@ -19,7 +19,7 @@ const EmptyBlock = ({ text, onClick = () => {} }) => {
         +
       </div>
     </button>
-  )
-}
+  );
+};
 
-export default EmptyBlock
+export default EmptyBlock;

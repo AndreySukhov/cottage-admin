@@ -1,7 +1,7 @@
 import React from 'react';
-import {ReactComponent as Bin} from "../../../assets/icons/bin.svg";
+import {ReactComponent as Bin} from '../../../assets/icons/bin.svg';
 
-import style from './style.module.css'
+import style from './style.module.css';
 
 const FileCard = ({name, id, handleRemove}) => {
   return (
@@ -15,7 +15,7 @@ const FileCard = ({name, id, handleRemove}) => {
         <Bin />
       </button>
     </div>
-  )
-}
+  );
+};
 
-export default FileCard
+export default FileCard;

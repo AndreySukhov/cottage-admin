@@ -1,11 +1,12 @@
 .wrap {
-  border-bottom: 1px solid #D8D8D8;
+  border-bottom: 1px solid #d8d8d8;
 }
 
 .content {
-  padding: 22px 18px;
   display: flex;
   align-items: center;
+
+  padding: 22px 18px;
 }
 
 .settings-wrap {
@@ -14,26 +15,30 @@
 
 .user {
   margin-right: 24px;
-  color: #000;
+
   text-decoration: none;
+
+  color: #000;
 }
 
 .user a {
-  color: inherit;
   text-decoration: inherit;
+
+  color: inherit;
 }
 
-.add-item{
+.add-item {
   margin-right: 10px;
 }
 
 .header-actions {
-  margin-left: auto;
   display: grid;
-  grid-template-columns: auto auto auto;
-  grid-gap: 25px;
 
   align-items: center;
+
+  margin-left: auto;
+  grid-template-columns: auto auto auto;
+  grid-gap: 25px;
 }
 
 .header-actions-item {
@@ -41,8 +46,9 @@
 }
 
 .header-publish {
-  margin-left: 15px;
   display: grid;
+
+  margin-left: 15px;
   grid-template-columns: auto auto;
   grid-gap: 8px;
 }

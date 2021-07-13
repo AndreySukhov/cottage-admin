@@ -1,22 +1,26 @@
 .wrap {
-  text-align: center;
   padding: 20px;
+
+  text-align: center;
 }
 
 .form-wrap {
-  margin: 0 auto;
   width: 660px;
+  margin: 0 auto;
   padding: 24px 120px 24px 24px;
+
   text-align: left;
 
-  background: #FFFFFF;
-  border: 1px solid #D3D3D3;
+  border: 1px solid #d3d3d3;
   border-radius: 4px;
+
+  background: #fff;
 }
 
 .form-item-grid {
-  display: grid;
   position: relative;
+
+  display: grid;
   grid-template-columns: 1fr 170px;
 }
 
@@ -34,8 +38,8 @@
 
 .aside {
   position: absolute;
-  right: -90px;
   top: 0;
+  right: -90px;
 }
 
 .aside-row {
@@ -43,20 +47,24 @@
 }
 
 .aside-row-btn {
+  padding: 0;
 
   cursor: pointer;
-  padding: 0;
+
   color: var(--grey60);
+
   font-size: 0.62rem;
   font-weight: 500;
 }
 
 .aside-row-btn--reset:hover {
-  color: #3073D8;
   text-decoration: underline;
+
+  color: #3073d8;
 }
 
 .aside-row-btn--delete:hover {
-  color: #DD4848;
   text-decoration: underline;
+
+  color: #dd4848;
 }

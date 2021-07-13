@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import cc from 'classcat'
+import cc from 'classcat';
 import {useDropzone} from 'react-dropzone';
 
-import FileCard from './FileCard'
-import processFiles from './processFiles'
+import FileCard from './FileCard';
+import processFiles from './processFiles';
 
-import style from './style.module.css'
+import style from './style.module.css';
 
 const FileUpload = ({
   previewText, options = {},
@@ -13,34 +13,34 @@ const FileUpload = ({
   defaultFiles = []
 }) => {
 
-  const [filesList, setFilesList] = useState(defaultFiles)
+  const [filesList, setFilesList] = useState(defaultFiles);
   const {acceptedFiles, getRootProps, getInputProps, isDragActive} = useDropzone({ ...options });
 
   const updateFiles = (files) => {
     const handleUpload = async (list) => {
-      const newFiles = await processFiles(list)
-      setFilesList([...filesList, ...newFiles])
-    }
+      const newFiles = await processFiles(list);
+      setFilesList([...filesList, ...newFiles]);
+    };
 
-    handleUpload(files)
-  }
+    handleUpload(files);
+  };
 
   useEffect(() => {
-    onSuccess(filesList.map((file) => file.id))
-  }, [filesList])
+    onSuccess(filesList.map((file) => file.id));
+  }, [filesList]);
 
   useEffect(() => {
 
     if (acceptedFiles.length) {
-      updateFiles(acceptedFiles)
+      updateFiles(acceptedFiles);
     }
-  }, [acceptedFiles])
+  }, [acceptedFiles]);
 
   const handleRemove = (id) => {
     setFilesList(filesList.filter((file) => {
-      return file.id !== id
-    }))
-  }
+      return file.id !== id;
+    }));
+  };
 
   return (
     <section className={style.ctn}>
@@ -54,7 +54,7 @@ const FileUpload = ({
                 key={file.id}
                 handleRemove={(id) => handleRemove(id)}
               />
-            )
+            );
           })}
         </div>
       )}
@@ -68,6 +68,6 @@ const FileUpload = ({
       </div>
     </section>
   );
-}
+};
 
-export default FileUpload
+export default FileUpload;

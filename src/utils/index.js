@@ -1,12 +1,13 @@
-import {HTTP_ERROR_CODES, USER_ROLES} from './constants'
+import {HTTP_ERROR_CODES, USER_ROLES} from './constants';
+import api from '../api'
 
 const httpErrorCodeToMessage = (code) => {
-  return HTTP_ERROR_CODES[code] || HTTP_ERROR_CODES.defaultError
-}
+  return HTTP_ERROR_CODES[code] || HTTP_ERROR_CODES.defaultError;
+};
 
 const isAdmin = (role) => {
-  return role === USER_ROLES.Admin.value
-}
+  return role === USER_ROLES.Admin.value;
+};
 
 const getLocalCurrencyStr = (num) => (
   num.toLocaleString('ru-RU', {
@@ -21,11 +22,20 @@ const declension = (nounArray, number) => {
     ? 2
     : cases[(num % 10 < 5) ? num % 10 : 5];
   return nounArray[index];
-}
+};
+
+const clearRemovedFiles = (initialFilesIds, currentFilesIds) => {
+  initialFilesIds.forEach((initialFileId) => {
+    if (!(currentFilesIds.find((item) => item === initialFileId))) {
+      api.delete(`File/delete/${initialFileId}`)
+    }
+  });
+};
 
 export {
   httpErrorCodeToMessage,
   isAdmin,
   getLocalCurrencyStr,
   declension,
-}
+  clearRemovedFiles
+};

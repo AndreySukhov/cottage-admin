@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
-import style from "../style.module.css";
-import Input from "../../../components/form/Input";
-import Button from "../../../components/form/Button";
-import FormRow from "../../../components/form/FormRow";
+import style from '../style.module.css';
+import Input from '../../../components/form/Input';
+import Button from '../../../components/form/Button';
+import FormRow from '../../../components/form/FormRow';
 
 
 const SetPasswordForm = () => {
-  const [password, setPassword] = useState('')
-  const [pending, setPending] = useState('')
+  const [password, setPassword] = useState('');
+  const [pending, setPending] = useState('');
   return (
     <>
       <FormRow>
@@ -27,7 +27,7 @@ const SetPasswordForm = () => {
         </div>
       </FormRow>
     </>
-  )
-}
+  );
+};
 
-export default SetPasswordForm
+export default SetPasswordForm;

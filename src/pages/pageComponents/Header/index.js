@@ -5,11 +5,11 @@ import {
 } from 'react-router-dom';
 
 
-import Button from '../../../components/form/Button'
-import { AppContext } from '../../../App'
-import { USER_ROLES } from '../../../utils/constants'
+import Button from '../../../components/form/Button';
+import { AppContext } from '../../../App';
+import { USER_ROLES } from '../../../utils/constants';
 
-import style from './style.module.css'
+import style from './style.module.css';
 
 import {ReactComponent as Gear} from '../../../assets/icons/gear.svg';
 import {ReactComponent as Excel} from '../../../assets/icons/excel.svg';
@@ -21,7 +21,7 @@ const Header = () => {
     user,
     handleAuthState,
     handleManageCottageVisible } = useContext(AppContext);
-  let isFormPage = !!useRouteMatch("/cottageForm/:cottageId")?.isExact;
+  let isFormPage = !!useRouteMatch('/cottageForm/:cottageId')?.isExact;
 
   return (
     <>
@@ -29,7 +29,7 @@ const Header = () => {
         <div className={style.content}>
           {user?.isAdmin && (
             <div className={style['settings-wrap']}>
-              <Link to={`/manageUsers`} className={`button-clear-style ${style['setting-link']}`}>
+              <Link to={'/manageUsers'} className={`button-clear-style ${style['setting-link']}`}>
                 <Gear />
               </Link>
             </div>
@@ -79,8 +79,8 @@ const Header = () => {
         </div>
       </header>
     </>
-  )
-}
+  );
+};
 
 
 export default Header;

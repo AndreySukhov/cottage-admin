@@ -1,0 +1,29 @@
+.info-item {
+  margin-bottom: 28px;
+}
+
+.option-item {
+  margin-bottom: 24px;
+}
+
+.option-wrap {
+  margin-bottom: 20px;
+}
+
+.option-item__title {
+  margin: 8px 0;
+}
+
+.cases-item__title {
+  margin: 4px 0;
+}
+
+.option-content {
+  display: flex;
+  align-items: center;
+  flex-flow: row wrap;
+}
+
+.form-option-wrap {
+  margin-right: 4px;
+}

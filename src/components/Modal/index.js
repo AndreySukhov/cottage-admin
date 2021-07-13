@@ -1,9 +1,9 @@
-import React from 'react'
-import ReactAriaModal from 'react-aria-modal'
-import cc from 'classcat'
-import PropTypes from 'prop-types'
+import React from 'react';
+import ReactAriaModal from 'react-aria-modal';
+import cc from 'classcat';
+import PropTypes from 'prop-types';
 
-import './style.css'
+import './style.css';
 
 const Modal = ({ children, contentClassName, className, isOpen, onCloseClick, overlayClassName, title, ariaTitle, shouldCloseOnOverlayClick, verticallyCenter, closeBtn, wide, xl, withPadding, fill, subtitle, ...props }) => {
   return (
@@ -26,8 +26,8 @@ const Modal = ({ children, contentClassName, className, isOpen, onCloseClick, ov
         {children}
       </div>
     </ReactAriaModal>
-  )
-}
+  );
+};
 
 Modal.defaultProps = {
   isOpen: false,
@@ -36,7 +36,7 @@ Modal.defaultProps = {
   titleText: 'Модальное окно',
   ariaTitle: 'Модальное окно',
   onCloseClick: () => {}
-}
+};
 
 Modal.propTypes = {
   children: PropTypes.node,
@@ -49,6 +49,6 @@ Modal.propTypes = {
   verticallyCenter: PropTypes.bool,
   ariaTitle: PropTypes.string,
   wide: PropTypes.bool,
-}
+};
 
-export default Modal
+export default Modal;

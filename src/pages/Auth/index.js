@@ -10,9 +10,9 @@ import Button from '../../components/form/Button';
 import SubmitRow from '../../components/form/SubmitRow';
 import Modal from '../../components/Modal';
 
-import ResetPassword from './ResetPassword'
+import ResetPassword from './ResetPassword';
 import api from '../../api';
-import { httpErrorCodeToMessage } from '../../utils/index'
+import { httpErrorCodeToMessage } from '../../utils/index';
 
 import style from './style.module.css';
 
@@ -24,7 +24,7 @@ const Auth = ({handleAuthState}) => {
   const [pending, setPending] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [resetModalVisible, setResetModalVisible] = useState(false)
+  const [resetModalVisible, setResetModalVisible] = useState(false);
 
   const allowSubmit = email.trim().length && password.trim().length;
 
@@ -39,13 +39,13 @@ const Auth = ({handleAuthState}) => {
       });
 
       if (res?.data?.data?.accessToken) {
-        handleAuthState(res.data.data.accessToken)
+        handleAuthState(res.data.data.accessToken);
       } else {
-        httpErrorCodeToMessage()
+        httpErrorCodeToMessage(e?.response?.status);
       }
     } catch (e) {
       setPending(false);
-      toast.error(e?.response?.data?.meta?.message || httpErrorCodeToMessage());
+      toast.error(e?.response?.data?.meta?.message || httpErrorCodeToMessage(e?.response?.status));
     }
   };
 

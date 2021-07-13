@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import OutsideClickHandler from 'react-outside-click-handler';
-import cc from "classcat";
+import cc from 'classcat';
 
-import Input from "../../../components/form/Input";
-import {ReactComponent as Check} from "../../../assets/icons/check.svg";
-import Button from "../../../components/form/Button";
-import api from "../../../api";
+import Input from '../../../components/form/Input';
+import {ReactComponent as Check} from '../../../assets/icons/check.svg';
+import Button from '../../../components/form/Button';
+import api from '../../../api';
 
-import style from "./style.module.css";
+import style from './style.module.css';
 
 const RenameProject = ({cottage, onSuccess}) => {
-  const [name, setName] = useState(cottage?.name || '')
-  console.log(cottage, 'cottage')
+  const [name, setName] = useState(cottage?.name || '');
+  console.log(cottage, 'cottage');
 
   const handleSave = () => {
     api.put(`Project/update/${cottage.id}`, {
@@ -23,9 +23,9 @@ const RenameProject = ({cottage, onSuccess}) => {
       onSuccess({
         ...cottage,
         name
-      })
-    })
-  }
+      });
+    });
+  };
 
   return (
     <OutsideClickHandler >
@@ -40,7 +40,7 @@ const RenameProject = ({cottage, onSuccess}) => {
         </Button>
       </div>
     </OutsideClickHandler>
-  )
-}
+  );
+};
 
-export default RenameProject
+export default RenameProject;

@@ -1,8 +1,8 @@
 import React from 'react';
 
-import TextBlock from "../typography/TextBlock";
+import TextBlock from '../typography/TextBlock';
 
-import style from './style.module.css'
+import style from './style.module.css';
 
 
 const InfoCard = ({onClick = () => {}, children, rightAside}) => {
@@ -31,7 +31,7 @@ const InfoCard = ({onClick = () => {}, children, rightAside}) => {
       </div>
 
     </div>
-  )
-}
+  );
+};
 
-export default InfoCard
+export default InfoCard;

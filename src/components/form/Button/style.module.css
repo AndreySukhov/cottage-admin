@@ -1,57 +1,67 @@
 .button {
   display: inline-flex;
   align-items: center;
-  text-decoration: none;
-  cursor: pointer;
-  font-size: 0.62rem;
-  font-weight: 700;
-  font-family: var(--Roboto);
+  justify-content: center;
+
   padding: 15px 10px 13px 10px;
+
+  cursor: pointer;
+  transition:
+    opacity var(--defaultTransitionType) var(--defaultTransitionTime),
+    color var(--defaultTransitionType) var(--defaultTransitionTime),
+    border-color var(--defaultTransitionType) var(--defaultTransitionTime),
+    background-color var(--defaultTransitionType) var(--defaultTransitionTime);
+  text-decoration: none;
+  text-transform: uppercase;
+
   border: 2px solid transparent;
   border-radius: 4px;
-  text-transform: uppercase;
   background: transparent;
-  justify-content: center;
-  transition: opacity var(--defaultTransitionType) var(--defaultTransitionTime),
-  color var(--defaultTransitionType) var(--defaultTransitionTime),
-  border-color var(--defaultTransitionType) var(--defaultTransitionTime),
-  background-color var(--defaultTransitionType) var(--defaultTransitionTime);
+
+  font-family: var(--Roboto);
+  font-size: 0.62rem;
+  font-weight: 700;
 }
 
 .button-primary {
-  color: var(--black);
-  background-color: var(--yellow);
   min-width: 80px;
+
+  color: var(--black);
   border-color: var(--yellow);
+  background-color: var(--yellow);
 }
 
 .button-dark {
   color: var(--white);
-  background: var(--grey100);
   border-color: var(--grey100);
+  background: var(--grey100);
 }
 
 .button-bordered {
-  background: transparent;
-  border: 2px solid var(--grey100);
   color: var(--black);
+  border: 2px solid var(--grey100);
+  background: transparent;
 }
 
 .button-text {
   padding: 0;
+
   color: var(--grey80);
   border: none;
 }
 
 .button-add {
-  background: var(--white);
-  border: 1px solid #828282;
+  justify-content: flex-start;
+
+  padding: 20px 16px;
+
   color: var(--black);
+  border: 1px solid #828282;
+  border-radius: 0;
+  background: var(--white);
+
   font-size: 1rem;
   font-weight: 700;
-  padding: 20px 16px;
-  border-radius: 0;
-  justify-content: flex-start;
 }
 
 .button-fw {
@@ -62,6 +72,7 @@
   width: 12px;
   height: 12px;
   margin-right: 7px;
+
   color: var(--black);
 }
 
@@ -71,19 +82,20 @@
 }
 
 .button:disabled {
-  opacity: 0.7;
   cursor: not-allowed;
+
+  opacity: 0.7;
 }
 
 .button-bordered:disabled {
   opacity: 1;
-  color: rgba(0,0,0,0.3);
-  border-color: rgba(0,0,0,0.3);
+  color: rgba(0, 0, 0, 0.3);
+  border-color: rgba(0, 0, 0, 0.3);
 }
 
 .button-primary:disabled {
   opacity: 1;
-  color: rgba(0,0,0,0.3);
-  background-color: #E5E5E5;
-  border-color: #E5E5E5;
+  color: rgba(0, 0, 0, 0.3);
+  border-color: #e5e5e5;
+  background-color: #e5e5e5;
 }

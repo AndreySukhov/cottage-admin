@@ -1,18 +1,20 @@
 .wrap {
-  min-height: 100vh;
   display: flex;
-  width: 100%;
   align-items: center;
   justify-content: center;
+
+  width: 100%;
+  min-height: 100vh;
 }
 
 .form {
-  background: #FFFFFF;
-  border: 1px solid #D3D3D3;
-  border-radius: 4px;
   max-width: 790px;
-  padding: 40px 48px;
   margin: 0 auto;
+  padding: 40px 48px;
+
+  border: 1px solid #d3d3d3;
+  border-radius: 4px;
+  background: #fff;
 }
 
 .input-wrap {

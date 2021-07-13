@@ -1,49 +1,49 @@
 import React, { useContext, useState, useEffect } from 'react';
 import {useLocation, useHistory} from 'react-router-dom';
-import {toast} from "react-toastify";
+import {toast} from 'react-toastify';
 
-import { AppContext } from '../../App'
-import Heading from "../../components/typography/Heading";
-import PasswordInput from "../../components/form/Input/PasswordInput";
-import SubmitRow from "../../components/form/SubmitRow";
-import Button from "../../components/form/Button";
+import { AppContext } from '../../App';
+import Heading from '../../components/typography/Heading';
+import PasswordInput from '../../components/form/Input/PasswordInput';
+import SubmitRow from '../../components/form/SubmitRow';
+import Button from '../../components/form/Button';
 
-import {httpErrorCodeToMessage} from "../../utils";
+import {httpErrorCodeToMessage} from '../../utils';
 import api from '../../api';
 
 import style from './style.module.css';
 
 const ResetPassword = () => {
   const { accessToken, handleAuthState } = useContext(AppContext);
-  const location = useLocation()
+  const location = useLocation();
   const history = useHistory();
 
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setconfirmPassword] = useState('')
-  const [pending, setPending] = useState(false)
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setconfirmPassword] = useState('');
+  const [pending, setPending] = useState(false);
 
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const token = params.get('token')
-    const email = params.get('email')
+    const token = params.get('token');
+    const email = params.get('email');
 
     if (!token || !email) {
       history.push('/');
-      return
+      return;
     }
 
     if (accessToken) {
-      handleAuthState(null)
+      handleAuthState(null);
     }
-  }, [accessToken])
+  }, [accessToken]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const params = new URLSearchParams(location.search);
-    const token = params.get('token')
-    const email = params.get('email')
+    const token = params.get('token');
+    const email = params.get('email');
 
     api.post(`Users/reset-password?token=${token}&email=${email}`, {
       password,
@@ -52,10 +52,10 @@ const ResetPassword = () => {
       history.push('/');
       toast.success('Пароль сброшен, пройдите авторизацию');
     }).catch((e) => {
-      console.error(e)
-      toast.error(httpErrorCodeToMessage());
-    })
-  }
+      console.error(e);
+      toast.error(e?.response?.data?.meta?.message || httpErrorCodeToMessage(e?.response?.status));
+    });
+  };
 
   const allowedToSubmit = password.length && confirmPassword.length && password === confirmPassword;
 
@@ -100,7 +100,7 @@ const ResetPassword = () => {
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default ResetPassword;

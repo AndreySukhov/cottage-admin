@@ -14,10 +14,10 @@ const Input = ({
   ...props
 }) => {
 
-  let Component = 'input'
+  let Component = 'input';
 
   if (textarea) {
-    Component = 'textarea'
+    Component = 'textarea';
   }
 
   return (

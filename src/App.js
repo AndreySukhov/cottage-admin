@@ -6,25 +6,25 @@ import {
   Redirect,
   withRouter,
 } from 'react-router-dom';
-import axios from "axios";
+import axios from 'axios';
 
 import {toast, ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PropTypes from 'prop-types';
 
 import Auth from './pages/Auth';
-import ManageUsers from './pages/ManageUsers'
-import CottageForm from './pages/CottageForm'
-import Header from './pages/pageComponents/Header'
-import ManageCottage from './pages/pageComponents/ManageCottage'
+import ManageUsers from './pages/ManageUsers';
+import CottageForm from './pages/CottageForm';
+import Header from './pages/pageComponents/Header';
+import ManageCottage from './pages/pageComponents/ManageCottage';
 
 import api from './api';
 
-import Modal from "./components/Modal";
+import Modal from './components/Modal';
 
 import './assets/styles/main.css';
-import {httpErrorCodeToMessage, isAdmin} from "./utils";
-import ResetPassword from "./pages/ResetPassword";
+import {httpErrorCodeToMessage, isAdmin} from './utils';
+import ResetPassword from './pages/ResetPassword';
 
 export const AppContext = React.createContext({
   accessToken: '',
@@ -46,12 +46,12 @@ class AppContextRoot extends Component {
   }
 
   componentDidMount() {
-    this.handleAuthToken()
+    this.handleAuthToken();
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.accessToken !== this.state.accessToken) {
-      this.handleAuthToken()
+      this.handleAuthToken();
     }
   }
 
@@ -61,23 +61,23 @@ class AppContextRoot extends Component {
     });
 
     if (accessToken) {
-      axios.defaults.headers
-      localStorage.setItem('accessToken',accessToken)
+      axios.defaults.headers;
+      localStorage.setItem('accessToken',accessToken);
     } else {
-      localStorage.removeItem('accessToken')
+      localStorage.removeItem('accessToken');
     }
   }
 
   handleAuthToken = () => {
     if (!this.state.accessToken) {
-      delete api.defaults.headers['Authorization']
-      localStorage.removeItem('accessToken')
+      delete api.defaults.headers['Authorization'];
+      localStorage.removeItem('accessToken');
       this.setState({
         user: null
-      })
+      });
     } else {
       api.defaults.headers['Authorization'] = `Bearer ${this.state.accessToken}`;
-      this.fetchUser()
+      this.fetchUser();
     }
   }
 
@@ -89,16 +89,16 @@ class AppContextRoot extends Component {
             ...data.data,
             isAdmin: isAdmin(data.data.role)
           }
-        })
-      }).catch(() => {
-        toast.error(httpErrorCodeToMessage());
-    })
+        });
+      }).catch((e) => {
+        toast.error(httpErrorCodeToMessage(e?.response?.status));
+      });
   }
 
   handleManageCottageVisible = (manageCottageVisible) => {
     this.setState({
       manageCottageVisible
-    })
+    });
   }
 
   render() {
@@ -126,12 +126,12 @@ class AppContextRoot extends Component {
 }
 
 const App = ({
-               accessToken,
-               manageCottageVisible,
-               handleManageCottageVisible,
-               handleAuthState,
-               user,
-             }) => {
+  accessToken,
+  manageCottageVisible,
+  handleManageCottageVisible,
+  handleAuthState,
+  user,
+}) => {
 
   return (
     <div className="App">
@@ -145,22 +145,25 @@ const App = ({
             {accessToken ?
               (
                 <>
-                  <Route exact path={`/manageUsers`}>
+                  <Route exact path={'/manageUsers'}>
                     {user && !user?.isAdmin ?
                       (<Redirect to={'/'} />)
                       : <ManageUsers/>
                     }
                   </Route>
                   <Route exact path="/cottageForm/:cottageId">
-                    <CottageForm/>
+                    {user && !user?.isAdmin ?
+                      (<Redirect to={'/'} />)
+                      : <CottageForm/>
+                    }
                   </Route>
                 </>
               ) :
               <>
-                <Route exact path={`/auth`}>
+                <Route exact path={'/auth'}>
                   <Auth handleAuthState={handleAuthState}/>
                 </Route>
-                <Redirect to={`/auth`}/>
+                <Redirect to={'/auth'}/>
               </>
             }
           </Switch>

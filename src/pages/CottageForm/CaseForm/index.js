@@ -6,55 +6,44 @@ import {httpErrorCodeToMessage} from '../../../utils';
 import FormRow from '../../../components/form/FormRow';
 import Input from '../../../components/form/Input';
 import Button from '../../../components/form/Button';
-import SelectInput from '../../../components/form/SelectInput';
 import FileUpload from '../../../components/form/FileUpload';
 
-const OPTIONS = [
-  { value: 'Option', label: 'опция'},
-  { value: 'AdditionalOption', label: 'дополнительная опция'},
-];
 
-const OptionForm = ({
-  constructiveId,
-  optionData,
-  onSuccess
+const CasesForm = ({
+ caseData,
+ onSuccess
 }) => {
-  const [optionType, setOptionType] = useState(() => {
-    if (optionData.type) {
-      return OPTIONS.find((({value}) => value === optionData.type))
-    }
 
-    return null
-  });
+  const [filesIds, setFilesIs] = useState([])
 
   return (
     <Formik
       initialValues={{
-        name: optionData?.name,
-        description: optionData?.description,
-        constructiveId,
+        name: caseData?.name,
+        code: caseData?.code,
+        price: caseData?.price
       }}
       onSubmit={(values, {setSubmitting}) => {
-        if (!optionType) {
-          toast.error('Необходимо выбрать тип опции');
+        if (!values.price) {
+          toast.error('Необходимо установить цену');
           return false;
         }
-
         setSubmitting(true);
 
         let method = 'post';
-        let url = 'Options/create';
+        let url = 'Cases/create';
 
-        if (optionData?.id) {
+        if (caseData?.id) {
           method = 'put';
-          url = `Options/update/${optionData.id}`;
+          url = `Cases/update/${caseData.id}`;
         }
 
         api[method](url, {
           name: values.name,
-          description: values.description,
-          constructiveId,
-          type: optionType.value,
+          code: values.code,
+          price: values.price,
+          optionId: caseData.optionId,
+          files: filesIds
         }).then((res) => {
           onSuccess(res.data.data);
           setSubmitting(false);
@@ -65,35 +54,49 @@ const OptionForm = ({
       }}
     >
       {({
-        values,
-        handleChange,
-        handleSubmit,
-        isSubmitting,
-      }) => (
+          values,
+          handleChange,
+          handleSubmit,
+          isSubmitting,
+        }) => (
         <form onSubmit={handleSubmit}>
           <FormRow>
             <Input
               fw
-              placeholder={'Название опции'}
+              placeholder={'Название варианта опции'}
               name="name"
               onChange={handleChange}
               value={values.name}
             />
           </FormRow>
           <FormRow>
-            <SelectInput
-              onChange={setOptionType}
-              selectedOption={optionType}
-              options={OPTIONS} />
+            <FileUpload
+              options={{
+                accept: 'image/jpeg, image/png',
+                maxFiles:5
+              }}
+              defaultFiles={filesIds}
+              onSuccess={(fileIds) => {
+                setFilesIs(fileIds)
+              }}
+              previewText={'Перетащите сюда файлы варианта опций'}/>
           </FormRow>
           <FormRow>
             <Input
               fw
-              textarea
-              placeholder={'Описание'}
-              name="description"
+              placeholder={'Цена'}
+              name="price"
               onChange={handleChange}
-              value={values.description}
+              value={values.price}
+            />
+          </FormRow>
+          <FormRow>
+            <Input
+              fw
+              placeholder={'Артикул'}
+              name="code"
+              onChange={handleChange}
+              value={values.code}
             />
           </FormRow>
           <FormRow>
@@ -101,7 +104,7 @@ const OptionForm = ({
               type={'submit'}
               disabled={isSubmitting}
             >
-            Сохранить
+              Сохранить
             </Button>
           </FormRow>
         </form>
@@ -109,4 +112,4 @@ const OptionForm = ({
     </Formik>
   );};
 
-export default OptionForm;
+export default CasesForm;

@@ -1,13 +1,16 @@
 .wrap {
   display: block;
+
   width: 100%;
-  padding: 30px !important;
-  text-align: center;
   min-height: 270px;
-  background-color: var(--white);
-  border: 1px solid #828282 !important;
+  padding: 30px !important;
+
   cursor: pointer;
   transition: background-color var(--defaultTransitionType) var(--defaultTransitionTime);
+  text-align: center;
+
+  border: 1px solid #828282 !important;
+  background-color: var(--white);
 }
 
 .text-wrap {
@@ -15,14 +18,17 @@
 }
 
 .plus {
-  width: 64px;
-  height: 64px;
-  background: var(--yellow);
-  border: 1px solid #828282;
-  margin: 0 auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
+  width: 64px;
+  height: 64px;
+  margin: 0 auto;
+
+  border: 1px solid #828282;
+  background: var(--yellow);
+
   font-size: 20px;
 }
 

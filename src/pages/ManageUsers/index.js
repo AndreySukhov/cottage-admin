@@ -1,28 +1,28 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {Helmet} from 'react-helmet';
-import {toast} from "react-toastify";
-import cc from 'classcat'
+import {toast} from 'react-toastify';
+import cc from 'classcat';
 
-import Preloader from '../../components/Preloader'
+import Preloader from '../../components/Preloader';
 import Input from '../../components/form/Input';
 import Button from '../../components/form/Button';
 import SubmitRow from '../../components/form/SubmitRow';
-import Modal from "../../components/Modal";
-import Heading from "../../components/typography/Heading";
-import TextBlock from "../../components/typography/TextBlock";
-import SelectInput from "../../components/form/SelectInput";
-import ResetPassword from "../Auth/ResetPassword";
-import AddUserForm from './AddUserForm'
+import Modal from '../../components/Modal';
+import Heading from '../../components/typography/Heading';
+import TextBlock from '../../components/typography/TextBlock';
+import SelectInput from '../../components/form/SelectInput';
+import ResetPassword from '../Auth/ResetPassword';
+import AddUserForm from './AddUserForm';
 
-import {AppContext} from "../../App";
-import api from '../../api'
-import {httpErrorCodeToMessage} from "../../utils";
-import {USER_ROLES_ARRAY, USER_ROLES} from "../../utils/constants";
+import {AppContext} from '../../App';
+import api from '../../api';
+import {httpErrorCodeToMessage} from '../../utils';
+import {USER_ROLES_ARRAY, USER_ROLES} from '../../utils/constants';
 
-import style from './style.module.css'
+import style from './style.module.css';
 
-import {ReactComponent as RefreshEmpty} from "../../assets/icons/refresh-empty.svg";
-import SetPasswordForm from "./SetPasswordForm";
+import {ReactComponent as RefreshEmpty} from '../../assets/icons/refresh-empty.svg';
+import SetPasswordForm from './SetPasswordForm';
 
 const ManageUsers = () => {
 
@@ -36,51 +36,51 @@ const ManageUsers = () => {
 
 
   const getUsers = () => {
-    setStatus('pending')
+    setStatus('pending');
     api.get('Users').then(({data}) => {
       setUsers(data.data.map((user) => {
         return {
           ...user,
           type: 'current'
-        }
-      }))
+        };
+      }));
     })
       .catch((e) => {
-        console.error(e)
-        toast.error(httpErrorCodeToMessage());
-      })
-    setStatus('success')
-  }
+        console.error(e);
+        toast.error(e?.response?.data?.meta?.message || httpErrorCodeToMessage(e?.response?.status));
+      });
+    setStatus('success');
+  };
 
   const handleRemoveUser = (id) => {
     api.delete(`/Users/${id}`)
       .then(() => {
         setUsers(users.filter((user) => user.id !== id));
-        setRemoveUserData(null)
+        setRemoveUserData(null);
         toast.success('Пользователь удален');
       }).catch((e) => {
-      console.error(e)
-      toast.error(httpErrorCodeToMessage());
-    })
-  }
+        console.error(e);
+        toast.error(e?.response?.data?.meta?.message || httpErrorCodeToMessage(e?.response?.status));
+      });
+  };
 
   const handleAddUser = async ({email, role}) => {
-    setStatus('userPending')
+    setStatus('userPending');
     try {
       const res = await api.post('/Users', {
         email,
         role
-      })
-      setRemoveUserData(null)
-      setUsers([...users, res.data.data])
+      });
+      setRemoveUserData(null);
+      setUsers([...users, res.data.data]);
       toast.success('Пользователь добавлен');
 
     } catch (e) {
-      console.error(e)
-      toast.error(httpErrorCodeToMessage());
+      console.error(e);
+      toast.error(e?.response?.data?.meta?.message || httpErrorCodeToMessage(e?.response?.status));
     }
-    setStatus('success')
-  }
+    setStatus('success');
+  };
 
   const updateRole = async (id, role) => {
     api.put(`/Users/${id}`, {
@@ -89,28 +89,28 @@ const ManageUsers = () => {
       const newUserData = res?.data?.data;
       setUsers(users.map((user) => {
         if (user.id === newUserData.id) {
-          return newUserData
+          return newUserData;
         }
-        return user
-      }))
+        return user;
+      }));
     }).catch((e) => {
-      console.error(e)
-      toast.error(httpErrorCodeToMessage());
-    })
-  }
+      console.error(e);
+      toast.error(e?.response?.data?.meta?.message || httpErrorCodeToMessage(e?.response?.status));
+    });
+  };
 
   useEffect(() => {
-    getUsers()
-  }, [])
+    getUsers();
+  }, []);
 
-  const formPending = status === 'formPending'
+  const formPending = status === 'formPending';
 
   if (status === 'pending') {
     return (
       <div className={style.wrap}>
         <Preloader/>
       </div>
-    )
+    );
   }
 
   return (
@@ -152,7 +152,7 @@ const ManageUsers = () => {
             <br/>
             <SubmitRow align="space-around">
               <Button onClick={() => {
-                handleRemoveUser(removeUserData.id)
+                handleRemoveUser(removeUserData.id);
               }}>
                 Да, удалить
               </Button>
@@ -171,7 +171,7 @@ const ManageUsers = () => {
         <div className={style['inputs-wrap']}>
           {users.map((user) => {
 
-            const isSameUser = user.id === context?.user?.id
+            const isSameUser = user.id === context?.user?.id;
 
             return (
               <div className={style['form-item-grid']} key={user.id}>
@@ -184,7 +184,7 @@ const ManageUsers = () => {
                     : (
                       <SelectInput
                         onChange={(val) => {
-                          updateRole(user.id, val.value)
+                          updateRole(user.id, val.value);
                         }}
                         selectedOption={{
                           value: user.role, label: USER_ROLES[user.role].label
@@ -202,7 +202,7 @@ const ManageUsers = () => {
                         disabled={formPending}
                         onClick={() => {
                           if(user) {
-                            setResetEmail(user.email)
+                            setResetEmail(user.email);
                           }
                         }}
                         type="button"
@@ -225,7 +225,7 @@ const ManageUsers = () => {
                   </>
                 </div>
               </div>
-            )
+            );
           })}
           <div className={style['form-item']}>
             <Button
@@ -234,7 +234,7 @@ const ManageUsers = () => {
               fw
               disabled={formPending}
               onClick={() => {
-                setModalVisible(true)
+                setModalVisible(true);
               }}
             >
               + Добавить пользователя
@@ -248,7 +248,7 @@ const ManageUsers = () => {
         <SetPasswordForm />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ManageUsers
+export default ManageUsers;

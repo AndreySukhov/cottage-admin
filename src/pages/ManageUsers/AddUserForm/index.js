@@ -3,34 +3,34 @@ import React, { useState } from 'react';
 import Input from '../../../components/form/Input';
 import Button from '../../../components/form/Button';
 import SubmitRow from '../../../components/form/SubmitRow';
-import FormRow from '../../../components/form/FormRow'
+import FormRow from '../../../components/form/FormRow';
 import SelectInput from '../../../components/form/SelectInput';
 
-import { USER_ROLES_ARRAY } from '../../../utils/constants'
+import { USER_ROLES_ARRAY } from '../../../utils/constants';
 
 import {ReactComponent as Refresh} from '../../../assets/icons/refresh.svg';
 
 const AddUserForm = ({ onAdd, onCancel }) => {
 
-  const [email, setEmail] = useState('')
-  const [role, setRole] = useState({})
+  const [email, setEmail] = useState('');
+  const [role, setRole] = useState({});
 
   return (
     <div>
       <form onSubmit={(e) => {
-        e.preventDefault()
+        e.preventDefault();
         onAdd({
           email,
           role: role?.value
-        })
-        onCancel()
+        });
+        onCancel();
       }}>
         <FormRow>
           <Input
             type="email"
             value={email}
             onChange={(e) => {
-              setEmail(e.target.value)
+              setEmail(e.target.value);
             }}
             fw
           />
@@ -48,6 +48,6 @@ const AddUserForm = ({ onAdd, onCancel }) => {
         </SubmitRow>
       </form>
     </div>
-  )
-}
-export default AddUserForm
+  );
+};
+export default AddUserForm;
