@@ -1,5 +1,6 @@
 import {HTTP_ERROR_CODES, USER_ROLES} from './constants';
 import api from '../api'
+import { useEffect } from "react";
 
 const httpErrorCodeToMessage = (code) => {
   return HTTP_ERROR_CODES[code] || HTTP_ERROR_CODES.defaultError;
@@ -7,6 +8,10 @@ const httpErrorCodeToMessage = (code) => {
 
 const isAdmin = (role) => {
   return role === USER_ROLES.Admin.value;
+};
+
+const isOwner = (role) => {
+  return role === USER_ROLES.Owner.value;
 };
 
 const getLocalCurrencyStr = (num) => (
@@ -32,10 +37,21 @@ const clearRemovedFiles = (initialFilesIds, currentFilesIds) => {
   });
 };
 
+const useDebouncedEffect = (effect, deps, delay) => {
+  useEffect(() => {
+    const handler = setTimeout(() => effect(), delay);
+
+    return () => clearTimeout(handler);
+
+  }, [...deps || [], delay]);
+}
+
 export {
   httpErrorCodeToMessage,
   isAdmin,
+  isOwner,
   getLocalCurrencyStr,
   declension,
-  clearRemovedFiles
+  clearRemovedFiles,
+  useDebouncedEffect,
 };

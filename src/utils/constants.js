@@ -1,7 +1,6 @@
 const USER_ROLES = {
   Admin: {value: 'Admin', label: 'администратор'},
-  Disigner:  {value: 'Disigner', label: 'дизайнер'},
-  Editor:  {value: 'Editor', label: 'редактор'}
+  Owner:  {value: 'Owner', label: 'Владелец'},
 };
 
 const HTTP_ERROR_CODES = {

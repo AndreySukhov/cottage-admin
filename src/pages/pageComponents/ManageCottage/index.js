@@ -91,7 +91,6 @@ const ManageCottage = ({onClose}) => {
     <div>
       <div className={style.list}>
         {cottageData.map((cottage) => {
-
           if (contextMenuActionDetails?.id === cottage.id) {
             return (
               <Fragment key={cottage?.id}>

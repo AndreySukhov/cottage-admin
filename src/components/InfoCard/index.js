@@ -4,8 +4,15 @@ import TextBlock from '../typography/TextBlock';
 
 import style from './style.module.css';
 
+import {ReactComponent as Bin} from "../../assets/icons/bin.svg";
 
-const InfoCard = ({onClick = () => {}, children, rightAside}) => {
+
+const InfoCard = ({
+  onClick = () => {},
+  onRemove,
+  children,
+  rightAside
+}) => {
   return(
     <div className={style.wrap}>
       <div className={style.content}>
@@ -27,6 +34,17 @@ const InfoCard = ({onClick = () => {}, children, rightAside}) => {
           <strong>
             {rightAside}
           </strong>
+          {onRemove && (
+            <div className={style['remove']}>
+              <button
+                type="button"
+                className={style['remove-btn']}
+                onClick={onRemove}
+              >
+                <Bin />
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

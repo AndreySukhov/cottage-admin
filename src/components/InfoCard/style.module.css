@@ -45,4 +45,22 @@
 
 .rightAside {
   margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.remove {
+  margin-left: 10px;
+  width: 20px;
+}
+
+.remove-btn {
+  width: 20px;
+
+  height: 20px;
+
+  padding: 0;
+
+  border: none;
+  background: transparent;
 }

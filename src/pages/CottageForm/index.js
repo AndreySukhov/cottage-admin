@@ -13,11 +13,12 @@ import OptionsPreview from './OptionsPreview';
 
 import style from './style.module.css';
 import api from '../../api';
-import { getLocalCurrencyStr, declension } from '../../utils';
+import {getLocalCurrencyStr, declension, httpErrorCodeToMessage} from '../../utils';
 import InfoCard from '../../components/InfoCard';
 import Button from '../../components/form/Button';
 import OptionForm from './OptionForm';
 import CasesForm from './CaseForm';
+import {toast} from "react-toastify";
 
 const CottageForm = (props) => {
 
@@ -45,6 +46,156 @@ const CottageForm = (props) => {
     setActiveCaseData(null);
   }
 
+  const handleCaseUpdate = (data) => {
+    const { constructiveId, optionId, ...rest } = data
+
+    const constructiveInfoCopy = [...constructiveInfo].map((item) => {
+      if (item.id === constructiveId) {
+        if (item.options.length) {
+          return {
+            ...item,
+            options: item.options.map((optionItem) => {
+              if (optionItem.id === optionId) {
+                if (optionItem?.cases.find((caseItem) => caseItem.id === data.id)) {
+                  return {
+                    ...optionItem,
+                    cases: optionItem.cases.map((caseLocalItem) => {
+                      if (caseLocalItem.id === rest.id) {
+                        return rest
+                      }
+                      return caseLocalItem
+                    })
+                  }
+                }
+
+                if (optionItem?.cases?.length > 0) {
+                  return {
+                    ...optionItem,
+                    cases: [...optionItem.cases, rest]
+                  }
+                }
+                return {
+                  ...optionItem,
+                  cases: [rest]
+                }
+              }
+
+              return optionItem
+            })
+          }
+        }
+      }
+      return item
+    })
+    setConstructiveInfo(constructiveInfoCopy);
+  }
+
+  const handleOptionUpdate = (data) => {
+    const {  constructiveId, ...rest } = data
+    console.log(data, 'data')
+
+    const constructiveInfoCopy = [...constructiveInfo].map((item) => {
+      if (item.id === constructiveId) {
+        if (item.options.length) {
+          return {
+            ...item,
+            options: item.options.map((optionItem) => {
+              if (optionItem.id === rest.id) {
+                console.log(optionItem,'optionItem')
+                console.log(rest,'rest')
+                console.log('hit')
+                return rest
+              }
+
+              return optionItem
+            })
+          }
+        }
+
+        return {
+          ...item,
+          options: [rest]
+        }
+      }
+      return item
+    })
+    setConstructiveInfo(constructiveInfoCopy);
+
+  }
+
+  const handleCaseRemove = (data) => {
+    const {  constructiveId, optionId, ...rest } = data
+
+    api.delete(`Cases/delete/${data.id}`)
+      .then((res) => {
+        if (res.status === 200) {
+          const constructiveInfoCopy = [...constructiveInfo].map((item) => {
+            if (item.id === constructiveId) {
+              if (item.options.length) {
+                return {
+                  ...item,
+                  options: item.options.map((optionItem) => {
+                    if (optionItem.id === optionId) {
+                      if (optionItem?.cases.find((caseItem) => caseItem.id === data.id)) {
+                        return {
+                          ...optionItem,
+                          cases: optionItem.cases.filter((caseItem) => caseItem.id !== rest.id)
+                        }
+                      }
+
+                      return optionItem
+                    }
+
+                    return optionItem
+                  })
+                }
+              }
+            }
+            return item
+          })
+          setConstructiveInfo(constructiveInfoCopy);
+        } else {
+          toast.error(httpErrorCodeToMessage());
+        }
+      }).catch((e) => {
+      toast.error(e?.response?.data?.meta?.message || httpErrorCodeToMessage(e?.response?.status));
+    });
+  }
+
+  const handleOptionRemove = (data) => {
+
+    api.delete(`Options/delete/${data.optionId}`)
+      .then((res) => {
+        if (res.status === 200) {
+          const constructiveInfoCopy = [...constructiveInfo].map((item) => {
+            if (item.id === data.constructiveId) {
+              if (item.options.length) {
+                return {
+                  ...item,
+                  options: item.options.filter(({id}) => data.optionId !== id)
+                }
+              }
+            }
+            return item
+          })
+          setConstructiveInfo(constructiveInfoCopy);
+        }
+      }).catch((e) => {
+      toast.error(e?.response?.data?.meta?.message || httpErrorCodeToMessage(e?.response?.status));
+    });
+  }
+
+  const handleConstructiveRemove = (constructiveId) => {
+    api.delete(`Constructives/delete/${constructiveId}`)
+      .then((res) => {
+        if (res.status === 200) {
+          const constructiveInfoCopy = [...constructiveInfo].filter(({id}) => constructiveId !== id)
+          setConstructiveInfo(constructiveInfoCopy);
+        }
+      }).catch((e) => {
+      toast.error(e?.response?.data?.meta?.message || httpErrorCodeToMessage(e?.response?.status));
+    });
+  }
 
   useEffect(() => {
     const id = routeMatch?.params?.cottageId;
@@ -61,7 +212,11 @@ const CottageForm = (props) => {
         const constructiveIds = constructiveInfo.map(({id}) => id)
 
         if (constructiveIds.length) {
-          const optionsData = await api.get(`Options?constructiveId=${constructiveIds.join(',')}`)
+          const formattedIds = constructiveIds.map((constructiveId) => {
+            return `ConstructiveIds[]=${constructiveId}`
+          })
+
+          const optionsData = await api.get(`Options?${formattedIds.join('&')}`)
 
           const optionsMap = {}
           const casesByOptionsMap = {}
@@ -210,6 +365,9 @@ const CottageForm = (props) => {
                     setFormStep('case')
                     setActiveCaseData(activeCaseData)
                   }}
+                  handleConstructiveRemove={(constructiveId) => handleConstructiveRemove(constructiveId)}
+                  handleOptionRemove={(data) => handleOptionRemove(data)}
+                  handleCaseRemove={(data) => handleCaseRemove(data)}
                   constructiveInfo={constructiveInfo} />
                 <div>
                   <Button
@@ -257,7 +415,7 @@ const CottageForm = (props) => {
               optionData={activeOptionData}
               constructiveId={activeConstructiveData.id}
               onSuccess={(data) => {
-                console.log(data, 'data');
+                handleOptionUpdate(data)
                 handleModalExit();
               }}
             />
@@ -266,7 +424,7 @@ const CottageForm = (props) => {
             <CasesForm
               caseData={activeCaseData}
               onSuccess={(data) => {
-              console.log(data,'case data')
+                handleCaseUpdate(data)
                 handleModalExit()
               }}
             />

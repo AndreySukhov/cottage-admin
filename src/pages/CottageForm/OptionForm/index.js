@@ -20,7 +20,7 @@ const OptionForm = ({
   onSuccess
 }) => {
   const [optionType, setOptionType] = useState(() => {
-    if (optionData.type) {
+    if (optionData?.type) {
       return OPTIONS.find((({value}) => value === optionData.type))
     }
 
@@ -56,7 +56,10 @@ const OptionForm = ({
           constructiveId,
           type: optionType.value,
         }).then((res) => {
-          onSuccess(res.data.data);
+          onSuccess({
+            constructiveId,
+            ...res.data.data
+          });
           setSubmitting(false);
         }).catch((e) => {
           toast.error(e?.response?.data?.meta?.message || httpErrorCodeToMessage(e?.response?.status));

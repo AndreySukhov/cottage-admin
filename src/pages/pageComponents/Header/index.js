@@ -27,7 +27,7 @@ const Header = () => {
     <>
       <header className={style.wrap}>
         <div className={style.content}>
-          {user?.isAdmin && (
+          {user?.isOwner && (
             <div className={style['settings-wrap']}>
               <Link to={'/manageUsers'} className={`button-clear-style ${style['setting-link']}`}>
                 <Gear />
@@ -47,22 +47,19 @@ const Header = () => {
               </Button>
             </div>
           </div>
+          {(user?.isAdmin || user?.isOwner) && (
           <div className={style['add-item']}>
             <Button view={'dark'} onClick={() => handleManageCottageVisible(true)}>
               Добавить страницу коттеджа
             </Button>
           </div>
+          )}
           <div className={style['header-actions']}>
             <div className={style['header-actions-item']}>
               <Button view={'text'} icon={<Excel />} disabled={!isFormPage}>
                 экспортировать в эксель
               </Button>
             </div>
-            {/*<div className={style['header-actions-item']}>*/}
-            {/*  <Button view={'text'} icon={<Refresh />} disabled={!isFormPage}>*/}
-            {/*    отменить изменения*/}
-            {/*  </Button>*/}
-            {/*</div>*/}
           </div>
           <div className={style['header-publish']}>
             <div className={style['header-publish-item']}>

@@ -17,13 +17,14 @@ import ManageUsers from './pages/ManageUsers';
 import CottageForm from './pages/CottageForm';
 import Header from './pages/pageComponents/Header';
 import ManageCottage from './pages/pageComponents/ManageCottage';
+import Main from './pages/Main';
 
 import api from './api';
 
 import Modal from './components/Modal';
 
 import './assets/styles/main.css';
-import {httpErrorCodeToMessage, isAdmin} from './utils';
+import {httpErrorCodeToMessage, isAdmin, isOwner} from './utils';
 import ResetPassword from './pages/ResetPassword';
 
 export const AppContext = React.createContext({
@@ -87,7 +88,8 @@ class AppContextRoot extends Component {
         this.setState({
           user: {
             ...data.data,
-            isAdmin: isAdmin(data.data.role)
+            isAdmin: isAdmin(data.data.role),
+            isOwner: isOwner(data.data.role)
           }
         });
       }).catch((e) => {
@@ -146,7 +148,7 @@ const App = ({
               (
                 <>
                   <Route exact path={'/manageUsers'}>
-                    {user && !user?.isAdmin ?
+                    {user && !user?.isOwner ?
                       (<Redirect to={'/'} />)
                       : <ManageUsers/>
                     }
@@ -156,6 +158,9 @@ const App = ({
                       (<Redirect to={'/'} />)
                       : <CottageForm/>
                     }
+                  </Route>
+                  <Route exact path="/">
+                    <Main />
                   </Route>
                 </>
               ) :

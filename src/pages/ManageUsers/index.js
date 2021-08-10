@@ -187,7 +187,7 @@ const ManageUsers = () => {
                           updateRole(user.id, val.value);
                         }}
                         selectedOption={{
-                          value: user.role, label: USER_ROLES[user.role].label
+                          value: user?.role, label: USER_ROLES[user?.role]?.label
                         }}
                         options={USER_ROLES_ARRAY}
                       />
@@ -211,7 +211,7 @@ const ManageUsers = () => {
                         сбросить пароль
                       </button>
                     </div>
-                    {!isSameUser && context.user.role === USER_ROLES.Admin.value && (
+                    {!isSameUser && context.user.role === USER_ROLES.Owner.value && (
                       <div className={style['aside-row']}>
                         <button
                           onClick={() => setRemoveUserData(user)}

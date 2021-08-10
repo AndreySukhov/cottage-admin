@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import OutsideClickHandler from 'react-outside-click-handler';
-import cc from 'classcat';
 
 import Input from '../../../components/form/Input';
 import {ReactComponent as Check} from '../../../assets/icons/check.svg';
@@ -11,8 +10,6 @@ import style from './style.module.css';
 
 const RenameProject = ({cottage, onSuccess}) => {
   const [name, setName] = useState(cottage?.name || '');
-  console.log(cottage, 'cottage');
-
   const handleSave = () => {
     api.put(`Project/update/${cottage.id}`, {
       name,

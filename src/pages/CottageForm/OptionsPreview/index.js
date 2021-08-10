@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import InfoCard from '../../../components/InfoCard';
 import Button from '../../../components/form/Button';
 import Radio from '../../../components/form/Radio'
@@ -13,6 +13,9 @@ const OptionsPreview = ({
   onOptionCreate,
   onOptionEdit,
   handleCaseFormData,
+  handleCaseRemove,
+  handleOptionRemove,
+  handleConstructiveRemove,
 }) => {
   return (
     <>
@@ -20,10 +23,11 @@ const OptionsPreview = ({
         return (
           <div key={infoItem.id} className={style['info-item']}>
             <InfoCard
+              onRemove={() => handleConstructiveRemove(infoItem.id)}
               onClick={() => onConstructiveClick(infoItem)}>
-              {infoItem.name}
+              {infoItem.name} id {infoItem.id}
             </InfoCard>
-            {infoItem.options.length > 0 && (
+            {infoItem?.options?.length > 0 && (
              <div className={style['option-item']}>
                <div className={style['option-item__title']}>
                  <Heading level={3}>
@@ -36,7 +40,11 @@ const OptionsPreview = ({
                      <InfoCard
                        onClick={() => {
                          onOptionEdit(infoItem, optionItem)
-                       }}>
+                       }}
+                      onRemove={() => {
+                        handleOptionRemove({constructiveId: infoItem.id, optionId: optionItem.id})
+                      }}
+                     >
                        <div className={style['option-content']}>
                          <div className={style['form-option-wrap']}>
                            {optionItem.type === 'Option' ?
@@ -63,14 +71,22 @@ const OptionsPreview = ({
                              <InfoCard
                                key={caseItem.id}
                                rightAside={getLocalCurrencyStr(caseItem.price)}
+                               onRemove={optionItem?.cases?.length > 1 ? ()=> {
+                                 handleCaseRemove({
+                                   ...caseItem,
+                                   optionId: optionItem.id,
+                                   constructiveId: infoItem.id
+                                 })
+                               } : null}
                                onClick={() => {
                                  handleCaseFormData({
                                    ...caseItem,
-                                   optionId: optionItem.id
+                                   optionId: optionItem.id,
+                                   constructiveId: infoItem.id
                                  })
                                }}>
                                {caseItem.name}
-                               {caseItem.files?.length > 0 && (
+                               {caseItem?.files?.length > 0 && (
                                  <>
                                    {' '}
                                    {caseItem.files.length}
@@ -86,7 +102,12 @@ const OptionsPreview = ({
                      )}
                      <div>
                        <Button
-                         onClick={handleCaseFormData}
+                         onClick={() => {
+                           handleCaseFormData({
+                             optionId: optionItem.id,
+                             constructiveId: infoItem.id
+                           })
+                         }}
                          view={'add'}
                        >
                          + Добавить вариант опции
