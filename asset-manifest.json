@@ -1,0 +1,34 @@
+{
+  "files": {
+    "main.css": "/cottage-admin/static/css/main.19ab7f62.chunk.css",
+    "main.js": "/cottage-admin/static/js/main.1eb4ab3e.chunk.js",
+    "main.js.map": "/cottage-admin/static/js/main.1eb4ab3e.chunk.js.map",
+    "runtime-main.js": "/cottage-admin/static/js/runtime-main.b8e18d61.js",
+    "runtime-main.js.map": "/cottage-admin/static/js/runtime-main.b8e18d61.js.map",
+    "static/css/2.1b32840c.chunk.css": "/cottage-admin/static/css/2.1b32840c.chunk.css",
+    "static/js/2.1bbd365a.chunk.js": "/cottage-admin/static/js/2.1bbd365a.chunk.js",
+    "static/js/2.1bbd365a.chunk.js.map": "/cottage-admin/static/js/2.1bbd365a.chunk.js.map",
+    "index.html": "/cottage-admin/index.html",
+    "static/css/2.1b32840c.chunk.css.map": "/cottage-admin/static/css/2.1b32840c.chunk.css.map",
+    "static/css/main.19ab7f62.chunk.css.map": "/cottage-admin/static/css/main.19ab7f62.chunk.css.map",
+    "static/js/2.1bbd365a.chunk.js.LICENSE.txt": "/cottage-admin/static/js/2.1bbd365a.chunk.js.LICENSE.txt",
+    "static/media/accordeon-arrow.184d8b6b.svg": "/cottage-admin/static/media/accordeon-arrow.184d8b6b.svg",
+    "static/media/bin.6092821d.svg": "/cottage-admin/static/media/bin.6092821d.svg",
+    "static/media/burger.3ad53f19.svg": "/cottage-admin/static/media/burger.3ad53f19.svg",
+    "static/media/check.237818e5.svg": "/cottage-admin/static/media/check.237818e5.svg",
+    "static/media/diskette.0079e11c.svg": "/cottage-admin/static/media/diskette.0079e11c.svg",
+    "static/media/excel.a858fd32.svg": "/cottage-admin/static/media/excel.a858fd32.svg",
+    "static/media/eye-closed.52fc06ee.svg": "/cottage-admin/static/media/eye-closed.52fc06ee.svg",
+    "static/media/eye-opened.063ae50a.svg": "/cottage-admin/static/media/eye-opened.063ae50a.svg",
+    "static/media/gear.977bfb58.svg": "/cottage-admin/static/media/gear.977bfb58.svg",
+    "static/media/refresh-empty.7724ea8e.svg": "/cottage-admin/static/media/refresh-empty.7724ea8e.svg",
+    "static/media/refresh.b4dc3751.svg": "/cottage-admin/static/media/refresh.b4dc3751.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.b8e18d61.js",
+    "static/css/2.1b32840c.chunk.css",
+    "static/js/2.1bbd365a.chunk.js",
+    "static/css/main.19ab7f62.chunk.css",
+    "static/js/main.1eb4ab3e.chunk.js"
+  ]
+}
