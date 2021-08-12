@@ -25,6 +25,7 @@ const Auth = ({handleAuthState}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [resetModalVisible, setResetModalVisible] = useState(false);
+  console.log('test')
 
   const allowSubmit = email.trim().length && password.trim().length;
 
