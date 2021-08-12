@@ -17,7 +17,6 @@ const OptionsPreview = ({
   handleOptionRemove,
   handleConstructiveRemove,
 }) => {
-
   return (
     <>
       {constructiveInfo.map((infoItem) => {
